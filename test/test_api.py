@@ -82,3 +82,21 @@ def test_resample_path_8k(speech_audio):
 def test_unknown_model_raises():
     with pytest.raises(KeyError):
         load_vad("totally-unknown-model")
+
+
+def test_flush_processes_trailing_audio(silero, speech_audio):
+    audio, sr = speech_audio
+    silero.reset()
+    # feed sub-frame chunks so the tail stays buffered, then flush
+    for i in range(0, 4096, 100):
+        silero.process_chunk(audio[i:i + 100], sample_rate=sr)
+    p = silero.flush()
+    assert isinstance(p, float) and 0.0 <= p <= 1.0
+    # flush is safe to call again with an empty buffer
+    assert isinstance(silero.flush(), float)
+
+
+def test_threshold_default_per_backend():
+    # load_vad without threshold keeps the backend's own default
+    assert load_vad("silero").threshold == 0.5
+    assert load_vad("silero", threshold=0.3).threshold == 0.3

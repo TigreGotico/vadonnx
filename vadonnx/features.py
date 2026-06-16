@@ -1,11 +1,7 @@
 """Numpy-only acoustic features (log-mel / fbank + CMVN).
 
-Some VAD models (FSMN, MarbleNet) classify acoustic features rather than raw PCM.
-The preferred approach is to *fold* the feature extractor into the ONNX graph at
-conversion time so the runtime stays raw-PCM-in / prob-out (``feature=None``). These
-helpers exist as a dependency-light fallback for models whose graph expects features,
-and are exercised directly by the test-suite. Implemented with numpy FFT only — no
-librosa/torchaudio at runtime.
+Some VAD model graphs classify acoustic features rather than raw PCM. These helpers
+supply them using numpy FFT only (no librosa/torchaudio at runtime).
 """
 from __future__ import annotations
 

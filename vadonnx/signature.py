@@ -31,7 +31,7 @@ class IOSignature:
             fed audio length is ``context_size + frame_size``. Reset to zeros.
         stateful: whether the model carries recurrent state between frames.
         feature: optional feature stage applied before inference.
-            ``None`` means raw PCM float32 is fed directly; ``"logmel"`` /
+            ``None`` means raw PCM float32 is fed directly; ``"logmel"``, ``"fbank"`` or
             ``"fbank_cmvn"`` run :mod:`vadonnx.features` first.
         feature_params: kwargs forwarded to the feature function.
         audio_input: name of the ONNX input that receives audio/features.

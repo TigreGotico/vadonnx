@@ -26,6 +26,17 @@ for chunk in mic_stream():                 # arbitrary chunk sizes
         on_speech()
 ```
 
+## Ending a stream
+
+Some models run on internal blocks larger than one frame (FSMN ~160 ms, MarbleNet and
+SpeechBrain ~0.5 s, pyannote 10 s). Audio shorter than one block stays buffered until
+the block fills. Call `flush()` once when the stream ends to process the trailing
+buffered audio and get the final probability:
+
+```python
+final_prob = vad.flush()
+```
+
 ## Resetting between utterances
 
 Stateful models (e.g. Silero) carry recurrent state across frames. Call `reset()` when

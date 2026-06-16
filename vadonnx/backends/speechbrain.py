@@ -92,8 +92,14 @@ class SbVAD(VADModel):
         self._audio_buf = np.concatenate([self._audio_buf, frame_f32])
         if self._audio_buf.shape[0] < 50 * _HOP:  # ~0.5 s blocks
             return self._stream_prob
+        return self._run_block()
+
+    def _run_block(self) -> float:
         p = self._forward(self._audio_buf)
         self._audio_buf = np.zeros(0, dtype=np.float32)
         if p.size:
             self._stream_prob = float(p[-1])
         return self._stream_prob
+
+    def _flush(self) -> float:
+        return self._run_block() if self._audio_buf.size else self._stream_prob

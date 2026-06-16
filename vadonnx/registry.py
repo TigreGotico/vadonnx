@@ -53,7 +53,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         revision="fbcc454c02e349042822de4a9c500df0179c080b",
         bundled="silero_vad.onnx",
         license="MIT",
-        description="Silero VAD v6 — fast, multilingual, the recommended default.",
+        description="Silero VAD v6, multilingual; bundled in the wheel for offline use.",
     ),
     "silero-op15": ModelSpec(
         name="silero-op15",

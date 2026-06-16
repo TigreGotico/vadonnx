@@ -22,6 +22,7 @@ bundled in the wheel, so it works fully offline.
 | `vadonnx[test]` | `pytest`, `pytest-cov` | running the test suite |
 | `vadonnx[convert]` | `onnx`, `huggingface_hub`, `requests` | converting silero/ten/fsmn |
 | `vadonnx[convert-marblenet]` | `nemo_toolkit[asr]`, `torch` | exporting MarbleNet |
+| `vadonnx[convert-speechbrain]` | `speechbrain`, `torch` | exporting SpeechBrain CRDNN |
 
 ## Model cache
 

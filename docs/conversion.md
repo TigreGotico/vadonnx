@@ -7,8 +7,9 @@ never need any of this — models download on demand.
 ## Install the conversion extras
 
 ```bash
-uv pip install "vadonnx[convert]"             # silero, ten, fsmn (light)
-uv pip install "vadonnx[convert-marblenet]"   # + nemo_toolkit[asr] + torch (heavy)
+uv pip install "vadonnx[convert]"              # silero, ten, fsmn, pyannote (light)
+uv pip install "vadonnx[convert-marblenet]"    # + nemo_toolkit[asr] + torch (heavy)
+uv pip install "vadonnx[convert-speechbrain]"  # + speechbrain + torch (heavy)
 ```
 
 ## Convert locally (no upload)
@@ -41,6 +42,8 @@ The script prints the resulting commit SHAs; pin them into the matching
 | `ten` | download official ONNX, discover signature | — |
 | `fsmn` | download `model.onnx` + `model_quant.onnx` + `am.mvn`; bake CMVN | `model_quant.onnx` |
 | `marblenet` | NeMo `EncDecFrameClassificationModel.export()`; bundle mel fb+window | `marblenet_int8.onnx` (dynamic) |
+| `speechbrain` | export CRDNN graph from SpeechBrain; bundle mel matrix+window | — |
+| `pyannote` | mirror the community ONNX (fp32 + int8) | `model_int8.onnx` |
 
 **Why MarbleNet ships features-input + a numpy frontend:** NeMo's preprocessor uses
 `torch.stft`, which neither ONNX exporter (dynamo or TorchScript) can emit. So the

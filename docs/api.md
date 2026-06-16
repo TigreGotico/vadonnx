@@ -8,7 +8,7 @@ Load a VAD model behind the unified API.
 |-----|---------|
 | `name` | model name (`"silero"`, `"silero-op15"`, `"silero-8k"`, `"marblenet"`/`-int8`, `"pyannote"`/`-int8`, `"fsmn"`/`-quant`, `"speechbrain"`, `"ten"`), a local `.onnx` path, or an `http(s)://` URL |
 | `signature` | `IOSignature` or dict; required for a raw `.onnx` without a `<model>.signature.json` sidecar |
-| `threshold` | activation threshold (default 0.5) |
+| `threshold` | activation threshold; when omitted each backend's own default applies (0.5 for most, 0.7 for `speechbrain`) |
 | `neg_threshold` | deactivation threshold (default `threshold - 0.15`) |
 | `providers` | ONNX Runtime execution providers (default `["CPUExecutionProvider"]`) |
 | `intra_threads`, `inter_threads` | ORT threading (default 1) |
@@ -29,9 +29,10 @@ The interface every backend exposes.
 
 | attribute / method | description |
 |--------------------|-------------|
-| `sample_rate`, `frame_size`, `stateful`, `threshold` | model properties |
+| `sample_rate`, `frame_size`, `stateful`, `threshold`, `neg_threshold` | model properties |
 | `frame_duration` | seconds per frame (`frame_size / sample_rate`) |
 | `process_chunk(audio, sample_rate=None) -> float` | streaming; returns last frame P(speech) |
+| `flush() -> float` | process trailing buffered audio at end of stream |
 | `__call__(audio, sample_rate=None)` | alias for `process_chunk` |
 | `is_speech(audio, sample_rate=None, threshold=None) -> bool` | boolean wrapper |
 | `probabilities(audio, sample_rate=None) -> np.ndarray` | per-frame probabilities (resets first) |

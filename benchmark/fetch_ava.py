@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Fetch AVA-Speech clip audio (the labeled 900-1800s window) for clips still on YouTube.
 
-Many AVA videos have rotted; we iterate ids and keep the first `--n` that download.
+AVA video sources may be unavailable; the script iterates video IDs and keeps the
+first `--n` that download successfully.
 Writes 16 kHz mono wav to data/ava_audio/<video_id>.wav.
 """
 import argparse

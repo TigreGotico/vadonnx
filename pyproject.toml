@@ -9,9 +9,15 @@ description = "Load arbitrary Voice Activity Detection (VAD) models behind a uni
 license = {text = "Apache-2.0"}
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Intended Audience :: Developers",
 ]
 authors = [{name = "JarbasAi", email = "jarbasai@mailfence.com"}]
 readme = "README.md"

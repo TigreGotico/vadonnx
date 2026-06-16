@@ -27,7 +27,7 @@ def load_vad(
     name: str = "silero",
     *,
     signature: Union[IOSignature, dict, None] = None,
-    threshold: float = 0.5,
+    threshold: Optional[float] = None,
     neg_threshold: Optional[float] = None,
     providers: Optional[List[str]] = None,
     intra_threads: int = 1,
@@ -48,7 +48,8 @@ def load_vad(
         name: model name, ``.onnx`` path, or URL.
         signature: required for custom ONNX without a sidecar; ignored for known models
             unless you want to override the registry signature.
-        threshold: activation threshold for speech.
+        threshold: activation threshold for speech. When omitted, each backend's own
+            default applies (0.5 for most models, 0.7 for ``speechbrain``).
         neg_threshold: deactivation threshold (defaults to ``threshold - 0.15``).
         providers: ONNX Runtime execution providers (default CPU).
         intra_threads / inter_threads: ORT threading (default 1 each, low latency).
@@ -60,6 +61,14 @@ def load_vad(
         A ready-to-use :class:`~vadonnx.base.VADModel`.
     """
     sig = coerce_signature(signature)
+
+    # common backend kwargs; pass threshold only when given so each backend keeps its
+    # own default otherwise.
+    common = dict(providers=providers, intra_threads=intra_threads,
+                  inter_threads=inter_threads, neg_threshold=neg_threshold,
+                  **backend_kwargs)
+    if threshold is not None:
+        common["threshold"] = threshold
 
     # 1. explicit local .onnx file
     if is_onnx_path(name) and not is_url(name):
@@ -75,11 +84,7 @@ def load_vad(
             )
         from .onnx_backend import OnnxVAD
 
-        return OnnxVAD(
-            name, sig, providers=providers, intra_threads=intra_threads,
-            inter_threads=inter_threads, threshold=threshold,
-            neg_threshold=neg_threshold, **backend_kwargs,
-        )
+        return OnnxVAD(name, sig, **common)
 
     # 2. URL
     if is_url(name):
@@ -89,11 +94,7 @@ def load_vad(
             raise ValueError("loading a URL model requires a `signature`")
         from .onnx_backend import OnnxVAD
 
-        return OnnxVAD(
-            path, sig, providers=providers, intra_threads=intra_threads,
-            inter_threads=inter_threads, threshold=threshold,
-            neg_threshold=neg_threshold, **backend_kwargs,
-        )
+        return OnnxVAD(path, sig, **common)
 
     # 3. registry name
     spec: Optional[ModelSpec] = get_spec(name)
@@ -105,8 +106,4 @@ def load_vad(
     path = resolve_spec_file(spec, revision, cache_dir)
     sig = sig or spec.signature
     backend_cls = get_backend(spec.backend)
-    return backend_cls(
-        path, sig, providers=providers, intra_threads=intra_threads,
-        inter_threads=inter_threads, threshold=threshold,
-        neg_threshold=neg_threshold, **backend_kwargs,
-    )
+    return backend_cls(path, sig, **common)

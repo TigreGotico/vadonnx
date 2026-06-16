@@ -9,10 +9,10 @@ dev-clean utterances concatenated with silence gaps and mixed with ESC-50 backgr
 noise at `clean / 20 / 15 / 10 / 5 / 0` dB. This gives exact reference labels and a
 controlled noise-robustness curve, fully reproducibly and without scraping.
 
-Scored backends: `silero`, `marblenet` (+int8), `fsmn` (+quant), `speechbrain`, plus two
-classical **baselines** — WebRTC VAD (`webrtc`) and an energy gate (`energy`) — as a
-reference floor. Three views: the synthetic SNR sweep, a real **VoxConverse** cross-check,
-and a per-noise-category breakdown.
+Scored backends: `silero`, `marblenet` (+int8), `fsmn` (+quant), `speechbrain`,
+`pyannote`, `ten`, plus two classical **baselines** — WebRTC VAD (`webrtc`) and an energy
+gate (`energy`) — as a reference floor. Three views: the synthetic SNR sweep, a real
+**VoxConverse** cross-check, and a per-noise-category breakdown.
 
 See [`results/REPORT.md`](results/REPORT.md) for the generated report and plots.
 

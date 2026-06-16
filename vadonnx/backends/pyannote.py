@@ -89,3 +89,15 @@ class PyannoteVAD(VADModel):
         if p.size:
             self._stream_prob = float(p[-1])
         return self._stream_prob
+
+    def _flush(self) -> float:
+        if self._audio_buf.size:
+            pad = np.pad(self._audio_buf, (0, _WINDOW - self._audio_buf.shape[0]))
+            p = self._window_probs(pad)
+            # keep only frames covering the real (unpadded) residual
+            keep = max(1, int(round(self._audio_buf.shape[0] / self.sample_rate
+                                    / self.frame_duration)))
+            self._audio_buf = np.zeros(0, dtype=np.float32)
+            if p.size:
+                self._stream_prob = float(p[:keep][-1])
+        return self._stream_prob

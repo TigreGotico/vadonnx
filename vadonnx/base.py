@@ -75,8 +75,9 @@ class VADModel(abc.ABC):
         """Feed one streaming chunk; return the most recent frame's speech probability.
 
         Chunks need not align to the model frame size — leftover samples are buffered
-        and combined with the next call. If the chunk does not yet complete a frame,
-        the previously computed probability is returned.
+        and combined with the next call. If the chunk does not complete a frame, the most
+        recently computed probability is returned. Call :meth:`flush` at end of stream to
+        process any trailing buffered audio.
         """
         x = self._prepare(audio, sample_rate)
         if x.size:
@@ -88,6 +89,22 @@ class VADModel(abc.ABC):
             self._last_prob = float(self._infer_frame(frame))
         if n_full:
             self._buf = self._buf[n_full * fs :].copy()
+        return self._last_prob
+
+    def flush(self) -> float:
+        """Process any audio buffered by streaming that is shorter than a frame/block,
+        and return the final speech probability. Call once when a stream ends."""
+        if self._buf.size:
+            frame = self._buf
+            if frame.shape[0] < self.frame_size:
+                frame = np.concatenate(
+                    [frame, np.zeros(self.frame_size - frame.shape[0], dtype=np.float32)])
+            self._last_prob = float(self._infer_frame(frame[: self.frame_size]))
+            self._buf = np.zeros(0, dtype=np.float32)
+        return self._flush()
+
+    def _flush(self) -> float:
+        """Backend hook: process residual buffered audio (block backends override)."""
         return self._last_prob
 
     def __call__(self, audio: AudioLike, sample_rate: Optional[int] = None) -> float:

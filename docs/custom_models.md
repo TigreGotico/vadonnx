@@ -31,7 +31,7 @@ loaded automatically and you can omit it.
 | `frame_size` | audio samples consumed per step (the hop) |
 | `context_size` | trailing samples of the previous frame to prepend (Silero uses 64) |
 | `stateful` | whether the model carries recurrent state |
-| `feature` | `None` (raw PCM) / `"logmel"` / `"fbank"` — runs `vadonnx.features` first |
+| `feature` | `None` (raw PCM) / `"logmel"` / `"fbank"` / `"fbank_cmvn"` — runs `vadonnx.features` first |
 | `feature_params` | kwargs for the feature extractor |
 | `audio_input` | name of the audio/feature input tensor |
 | `audio_layout` | `"BT"` `(1,T)`, `"T"` `(T,)`, `"BFT"` `(1,feat,frames)`, `"BTF"` `(1,frames,feat)` |

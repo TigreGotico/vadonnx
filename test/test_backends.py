@@ -1,7 +1,7 @@
 """Offline structural tests for the non-bundled backends.
 
 Functional inference for these models requires their downloaded ONNX (see
-test_download.py, network-gated). Here we check the wiring works offline.
+test_download.py, network-gated). These tests verify the wiring offline.
 """
 import os
 

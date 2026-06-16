@@ -48,3 +48,31 @@ def test_get_backend_dotted_path():
 def test_get_backend_unknown():
     with pytest.raises(KeyError):
         get_backend("nope")
+
+
+def test_plugin_discovery(monkeypatch):
+    """Entry-point models are discovered and merged into the registry."""
+    import importlib.metadata as md
+
+    import vadonnx.registry as reg
+
+    spec = ModelSpec(name="plugin-vad",
+                     signature=IOSignature(sample_rate=16000, frame_size=512),
+                     hf_repo="x/y", filename="m.onnx")
+
+    class FakeEP:
+        name = "plugin-vad"
+
+        def load(self):
+            return spec
+
+    def fake_eps(*args, **kwargs):
+        return [FakeEP()] if kwargs.get("group") == "vadonnx.models" else []
+
+    monkeypatch.setattr(md, "entry_points", fake_eps)
+    monkeypatch.setattr(reg, "_PLUGINS_LOADED", False)
+    monkeypatch.setattr(reg, "_PLUGIN_SPECS", {})
+    monkeypatch.setattr(reg, "_PLUGIN_BACKENDS", {})
+    reg.discover_plugins()
+    assert reg.get_spec("plugin-vad") is spec
+    assert "plugin-vad" in list_models()

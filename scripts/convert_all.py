@@ -5,9 +5,10 @@
 """
 import sys
 
-from vadonnx.convert import fsmn, marblenet, silero, ten
+from vadonnx.convert import fsmn, marblenet, pyannote, silero, speechbrain, ten
 
-CONVERTERS = {"silero": silero, "ten": ten, "fsmn": fsmn, "marblenet": marblenet}
+CONVERTERS = {"silero": silero, "ten": ten, "fsmn": fsmn, "marblenet": marblenet,
+              "speechbrain": speechbrain, "pyannote": pyannote}
 
 
 def main(argv):

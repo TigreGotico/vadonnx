@@ -142,6 +142,9 @@ class FsmnVAD(VADModel):
         self._audio_buf = np.concatenate([self._audio_buf, frame_f32])
         if self._audio_buf.shape[0] < 16 * _FBANK_SHIFT:  # ~160 ms blocks
             return self._stream_prob
+        return self._run_block()
+
+    def _run_block(self) -> float:
         feats = self._features(self._audio_buf)
         self._audio_buf = np.zeros(0, dtype=np.float32)
         if feats.shape[0]:
@@ -149,3 +152,6 @@ class FsmnVAD(VADModel):
             if p_speech.size:
                 self._stream_prob = float(p_speech[-1])
         return self._stream_prob
+
+    def _flush(self) -> float:
+        return self._run_block() if self._audio_buf.size else self._stream_prob
