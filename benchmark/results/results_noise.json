@@ -46,6 +46,13 @@
       "interior/domestic": 0.9748989201060313,
       "exterior/urban": 0.9776952727815822
     },
+    "ten": {
+      "animals": 0.9223478573263879,
+      "nature/water": 0.9121140959623417,
+      "human non-speech": 0.8897071301150647,
+      "interior/domestic": 0.9308161194799258,
+      "exterior/urban": 0.9090853637972408
+    },
     "webrtc": {
       "animals": 0.6687896706941953,
       "nature/water": 0.6433057061896423,
