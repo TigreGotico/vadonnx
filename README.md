@@ -38,19 +38,18 @@ uv pip install "vadonnx[mic]"   # + microphone examples
 
 ## Models
 
-| name | rate | parity | notes |
-|------|------|--------|-------|
-| `silero` / `silero-8k` | 16k / 8k | ✅ verified bit-exact (MAE 0) vs upstream | bundled, recommended default |
-| `marblenet` / `marblenet-int8` | 16k | ⚠️ near-parity (MAE ~4e-4 vs NeMo) | NVIDIA NeMo Frame-VAD ([license](docs/licensing.md)) |
-| `pyannote` / `pyannote-int8` | 16k | ⚠️ community ONNX (strong) | pyannote segmentation-3.0, windowed; great for diarization users |
-| `fsmn` / `fsmn-quant` | 16k | ⚠️ best-effort (sane, not bit-exact) | FunASR FSMN-VAD; needs `vadonnx[fsmn]` |
-| `speechbrain` | 16k | ⚠️ best-effort, **first-to-ONNX** (exact parity) | SpeechBrain CRDNN; LibriParty-tuned, high recall |
-| `ten` | 16k | ❌ experimental / reference only | needs TEN's native feature extractor — see [caveats](docs/backends.md) |
+| name | rate | parity vs upstream | notes |
+|------|------|--------------------|-------|
+| `silero` / `silero-8k` / `silero-op15` | 16k / 8k / 16k | MAE 0 | bundled default, raw PCM |
+| `marblenet` / `marblenet-int8` | 16k | MAE 4e-4 | NVIDIA NeMo Frame-VAD, multilingual ([license](docs/licensing.md)) |
+| `pyannote` / `pyannote-int8` | 16k | MAE 0 | pyannote segmentation-3.0, windowed |
+| `fsmn` / `fsmn-quant` | 16k | tracks upstream | FunASR FSMN-VAD; needs `vadonnx[fsmn]` |
+| `speechbrain` | 16k | MAE 0 | SpeechBrain CRDNN, LibriParty-trained |
+| `ten` | 16k | — | feature extractor provided by TEN's native library |
 
-vadonnx is, to our knowledge, the **first to provide an ONNX export of SpeechBrain's
-CRDNN VAD**. See [docs/backends.md](docs/backends.md) for per-model detail and the
-[benchmark](benchmark/results/REPORT.md) for measured comparisons (incl. WebRTC + energy
-baselines).
+See [docs/backends.md](docs/backends.md) for per-model detail and the
+[benchmark](benchmark/results/REPORT.md) for measured comparisons across datasets,
+including WebRTC and energy baselines.
 
 Models other than the bundled Silero are downloaded on first use from the
 [`TigreGotico`](https://huggingface.co/TigreGotico) HuggingFace org and cached under

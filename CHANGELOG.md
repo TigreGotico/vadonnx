@@ -7,7 +7,7 @@ Initial release.
 - Unified ONNX VAD API: `load_vad()`, `VADModel`, `IOSignature`, `SpeechSegment`.
 - Generic declarative `OnnxVAD` engine driven by per-model IO signatures.
 - Built-in backends: `silero`, `silero-op15`, `silero-8k`, `marblenet` (+int8),
-  `fsmn` (+quant), `speechbrain` (first-to-ONNX), `pyannote` (+int8), `ten` (reference).
+  `fsmn` (+quant), `speechbrain`, `pyannote` (+int8), `ten`.
 - Streaming (`process_chunk`) and batch (`probabilities`, `get_speech_segments`) APIs.
 - Bundled Silero v6 model for fully offline default usage.
 - Model registry with local-path / URL / HuggingFace resolution and entry-point plugins.

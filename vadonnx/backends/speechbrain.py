@@ -1,13 +1,14 @@
-"""SpeechBrain CRDNN VAD backend (first-to-ONNX export).
+"""SpeechBrain CRDNN VAD backend.
 
-`speechbrain/vad-crdnn-libriparty` ships no ONNX upstream; vadonnx exports the
-features→posterior graph (Fbank → mean-var-norm → CNN → RNN → DNN → sigmoid) and
-reproduces SpeechBrain's exact Fbank in numpy (STFT center-padded, Hamming window,
-power spectrum, SpeechBrain's mel filter matrix, dB with top-dB clamp) — end-to-end
-parity vs SpeechBrain is exact (MAE 0). The mel matrix + window are bundled in the wheel.
+Runs the ``speechbrain/vad-crdnn-libriparty`` model: a 40-mel log-Fbank is computed in
+numpy (center-padded STFT, Hamming window, power spectrum, SpeechBrain's mel filter
+matrix, dB with top-dB clamp) and fed to the CRDNN graph (mean-var-norm → CNN → RNN →
+DNN → sigmoid), giving a per-frame speech posterior at 10 ms resolution. The mel matrix
+and window are bundled in the wheel.
 
-Note: this model is LibriParty-trained and tends toward high recall (it over-detects on
-clean broadcast speech); see docs/backends.md.
+The model is trained on LibriParty (overlapping cocktail-party speech); on clean
+single-speaker audio it labels low-level ambient sound as active, so the default
+threshold is 0.7.
 """
 from __future__ import annotations
 

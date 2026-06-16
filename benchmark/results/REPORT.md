@@ -128,13 +128,10 @@ crying) — the hardest case for VAD since it is spectrally speech-like — and 
 **interior/domestic** sounds.
 
 ### Notes
-- The synthetic sweep gives exact labels and a controlled noise sweep; its absolute
-  numbers are optimistic (utterance-internal pauses are labeled speech). The **VoxConverse**
-  section above is the realistic in-the-wild check. Relative ranking and robustness slopes
-  are the takeaway across both.
-- **AVA-Speech** (the other standard) was attempted but its YouTube source has rotted /
-  is bot-blocked (0/70 clips fetchable in this environment), so it could not be scored.
-  The loader (`datasets.load_ava_speech`) and label CSV are in place for environments with
-  working YouTube access.
-- `int8` variants are included to show the accuracy cost of quantization (negligible here).
-- `ten` is excluded — its pure-ONNX path is non-functional (native feature extractor).
+- The synthetic sweep uses exact labels; utterance-internal pauses count as speech, so it
+  measures speech/silence discrimination and noise robustness. **VoxConverse** provides the
+  in-the-wild reference.
+- **AVA-Speech** scoring is supported (`datasets.load_ava_speech` + label CSV); its audio
+  is fetched separately from YouTube via `yt-dlp`.
+- `int8` variants show the accuracy difference from quantization.
+- `ten` requires TEN's native feature extractor and is not scored here.

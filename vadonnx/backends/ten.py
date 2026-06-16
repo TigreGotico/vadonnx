@@ -1,27 +1,26 @@
-"""TEN VAD backend (experimental / reference only).
+"""TEN VAD backend.
 
-TEN VAD's ONNX expects a precomputed ``[B, 3, 41]`` mel+pitch feature tensor plus four
-recurrent state tensors. Feature extraction lives in TEN's **native C library**, which
-``vadonnx`` does not reproduce — so there is no faithful pure-ONNX raw-PCM path. The
-ONNX and its discovered signature are published on the TigreGotico HF org for
-experimentation, but loading ``ten`` raises a clear error rather than returning
-incorrect probabilities. Use ``silero`` or ``marblenet`` instead. See docs/backends.md.
+The TEN VAD ONNX graph consumes a precomputed ``[B, 3, 41]`` mel+pitch feature tensor
+and four recurrent state tensors. Feature extraction is implemented in TEN's native
+library and is not reproduced here, so the model is not driven through the vadonnx ONNX
+API; constructing it raises :class:`NotImplementedError`. The ONNX file and its signature
+are published for use with TEN's own feature pipeline.
 """
 from __future__ import annotations
 
 from ..onnx_backend import OnnxVAD
 
 _MSG = (
-    "The 'ten' backend is experimental and not functional as a pure-ONNX model: TEN VAD's "
-    "mel+pitch feature extraction lives in its native C library, which vadonnx does not "
-    "reproduce. The ONNX + signature are published at TigreGotico/ten-vad-onnx for "
-    "experimentation. Use load_vad('silero') or load_vad('marblenet') instead. "
-    "See https://github.com/TigreGotico/vadonnx/blob/dev/docs/backends.md"
+    "The 'ten' backend cannot run through vadonnx's ONNX path: TEN VAD's mel+pitch "
+    "feature extraction is provided by its native library, which vadonnx does not "
+    "reproduce. The ONNX and signature are published at TigreGotico/ten-vad-onnx for use "
+    "with TEN's feature pipeline. For a self-contained model use load_vad('silero'), "
+    "load_vad('marblenet') or load_vad('pyannote')."
 )
 
 
 class TenVAD(OnnxVAD):
-    """Reference-only TEN VAD backend; raises with guidance (see module docstring)."""
+    """Backend for TEN VAD (see module docstring)."""
 
     def __init__(self, *args, **kwargs):
         raise NotImplementedError(_MSG)

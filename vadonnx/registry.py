@@ -92,7 +92,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         filename="ten-vad.onnx",
         revision="225df9e0b79788bb5ee037e62e7fb22f7993c882",
         license="Apache-2.0",
-        description="TEN VAD — experimental/reference only (needs native feature extractor).",
+        description="TEN VAD; feature extraction provided by TEN's native library.",
     ),
     "fsmn": ModelSpec(
         name="fsmn",
@@ -107,7 +107,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         revision="2216bade214cd80e818bce2c823c878dba117898",
         license="MIT",
         extras=["kaldi-native-fbank"],
-        description="FunASR FSMN-VAD (fbank+LFR+CMVN frontend; best-effort parity).",
+        description="FunASR FSMN-VAD with a fbank+LFR+CMVN frontend.",
     ),
     "fsmn-quant": ModelSpec(
         name="fsmn-quant",
@@ -136,7 +136,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         filename="marblenet.onnx",
         revision="e8786fe74e055954901eb553cc9c3145323981cc",
         license="NVIDIA-OpenModelLicense",
-        description="NVIDIA NeMo Frame-VAD MarbleNet (numpy mel frontend, ~parity).",
+        description="NVIDIA NeMo Frame-VAD MarbleNet, multilingual.",
     ),
     "marblenet-int8": ModelSpec(
         name="marblenet-int8",
@@ -164,7 +164,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         filename="sb_vad_crdnn.onnx",
         revision="61e5b4cbcffb6eac7770292ba84609164ea66b3d",
         license="Apache-2.0",
-        description="SpeechBrain CRDNN VAD (first-to-ONNX; LibriParty-tuned, high recall).",
+        description="SpeechBrain CRDNN VAD, LibriParty-trained.",
     ),
     "pyannote": ModelSpec(
         name="pyannote",
@@ -178,7 +178,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         filename="model.onnx",
         revision="dd19a60106a77a38aa2eea2ab07338ce2e21634f",
         license="MIT",
-        description="pyannote segmentation-3.0 VAD (community ONNX; strong, windowed).",
+        description="pyannote segmentation-3.0 VAD, windowed.",
     ),
     "pyannote-int8": ModelSpec(
         name="pyannote-int8",

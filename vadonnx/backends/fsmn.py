@@ -6,9 +6,8 @@ four recurrent caches. The graph emits a 248-way softmax per 10 ms frame; the sp
 probability is ``1 - p(silence)`` where silence is PDF id 0
 (``P(speech) = 1 - softmax[..., 0]``).
 
-Feature extraction uses `kaldi-native-fbank` (the ``fsmn`` extra) for fidelity with
-upstream; the CMVN statistics are bundled in the wheel. This is a best-effort port —
-output tracks upstream closely but is not bit-exact (see docs/backends.md).
+Feature extraction uses `kaldi-native-fbank` (the ``fsmn`` extra); the CMVN statistics
+are bundled in the wheel.
 """
 from __future__ import annotations
 
@@ -46,7 +45,7 @@ def _apply_lfr(feat: np.ndarray, m: int = _LFR_M, n: int = _LFR_N) -> np.ndarray
 
 
 class FsmnVAD(VADModel):
-    """Best-effort FSMN-VAD backend (batch + streaming)."""
+    """FSMN-VAD backend (batch + streaming)."""
 
     def __init__(
         self,

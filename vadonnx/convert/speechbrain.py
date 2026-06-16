@@ -1,9 +1,9 @@
-"""Export SpeechBrain CRDNN VAD to ONNX (first-to-ONNX) and package it.
+"""Export SpeechBrain CRDNN VAD to ONNX and package it.
 
 Requires the ``convert-speechbrain`` extra (``speechbrain`` + ``torch``), imported
 lazily. Exports the features→posterior graph (mean-var-norm + CNN + RNN + DNN + sigmoid)
-and bundles SpeechBrain's exact Fbank mel matrix + window into the wheel so the runtime
-numpy frontend reproduces it bit-exactly. No official ONNX exists upstream.
+and bundles SpeechBrain's Fbank mel matrix + window into the wheel for the runtime numpy
+frontend.
 """
 from __future__ import annotations
 
@@ -70,8 +70,7 @@ def convert(out_dir: str = "scratch/sb") -> dict:
     card = common.make_card("sb-vad-crdnn", UPSTREAM, "Apache-2.0", sig)
     card_path = os.path.join(out_dir, "README.md")
     with open(card_path, "w") as f:
-        f.write(card + "\n> First-to-ONNX export of SpeechBrain CRDNN VAD. "
-                "LibriParty-tuned (high recall).\n")
+        f.write(card + "\n> SpeechBrain CRDNN VAD, trained on LibriParty.\n")
     return {"model": model, "card": card_path, "repo": REPO,
             "signature": os.path.join(out_dir, "sb_vad_crdnn.signature.json")}
 

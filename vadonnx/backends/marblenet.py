@@ -1,15 +1,10 @@
 """NVIDIA NeMo Frame-VAD MarbleNet backend.
 
-MarbleNet classifies 80-dim log-mel features (preemphasised, centered STFT, power
-spectrum, NeMo's mel filterbank, ``log(x + 5.96e-8)``) and emits 2-class logits per
-20 ms output frame; ``P(speech) = softmax(logits)[..., 1]``. The mel filterbank and
-window are extracted from NeMo and bundled in the wheel, so the numpy frontend
-reproduces NeMo's preprocessor closely (end-to-end MAE ~4e-4 vs NeMo).
-
-The ONNX graph takes features (NeMo's STFT preprocessor cannot be folded into ONNX —
-`torch.stft` is not exportable), so this backend computes the mel frontend in numpy.
-MarbleNet is a CNN over the whole sequence (stateless across calls); streaming
-processes audio in blocks.
+The ONNX graph classifies 80-dim log-mel features and emits 2-class logits per 20 ms
+frame; ``P(speech) = softmax(logits)[..., 1]``. The mel frontend is computed in numpy
+(preemphasis, centered STFT, power spectrum, NeMo's mel filterbank, ``log(x + 5.96e-8)``)
+using the mel filterbank and window bundled in the wheel. MarbleNet is a CNN over the
+whole sequence (stateless across calls); streaming processes audio in blocks.
 """
 from __future__ import annotations
 
@@ -30,7 +25,7 @@ _OUT_FRAME = 320  # 20 ms @ 16 kHz (model downsamples mel frames by 2)
 
 
 class MarbleVAD(VADModel):
-    """Best-effort NeMo Frame-VAD MarbleNet backend (near-parity numpy frontend)."""
+    """NeMo Frame-VAD MarbleNet backend."""
 
     def __init__(
         self,
@@ -92,7 +87,7 @@ class MarbleVAD(VADModel):
         e = np.exp(out)
         return (e[:, 1] / e.sum(axis=-1)).astype(np.float32)
 
-    # batch path (near-parity vs NeMo)
+    # batch path
     def _run_all(self, x: np.ndarray) -> np.ndarray:
         return self._forward(x) if x.shape[0] else np.zeros(0, dtype=np.float32)
 

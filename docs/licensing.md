@@ -8,7 +8,7 @@ their upstream licenses — your obligations depend on which model you load.
 | `silero` / `silero-8k` | MIT | freely redistributable (bundled in the wheel) |
 | `ten` | Apache-2.0 | freely redistributable |
 | `fsmn` / `fsmn-quant` | MIT (FunASR) | freely redistributable |
-| `speechbrain` | Apache-2.0 (SpeechBrain) | freely redistributable (first-to-ONNX export) |
+| `speechbrain` | Apache-2.0 (SpeechBrain) | freely redistributable |
 | `pyannote` / `pyannote-int8` | MIT | community ONNX of a gated upstream; see below |
 | `marblenet` | **NVIDIA Open Model License** | see below |
 

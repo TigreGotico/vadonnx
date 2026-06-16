@@ -1,10 +1,9 @@
 """Fetch, verify and package the TEN VAD ONNX for publishing.
 
 TEN VAD (Apache-2.0) ships an official ONNX in its repo. The graph expects precomputed
-features (a `[B, 3, 41]` mel+pitch tensor) plus four recurrent state tensors — feature
-extraction lives in TEN's native C library, which `vadonnx` does not reproduce. This
-converter downloads, inspects and republishes the ONNX with a signature describing its
-true IO so it is available for experimentation; see docs/backends.md for the caveat.
+features (a `[B, 3, 41]` mel+pitch tensor) plus four recurrent state tensors; feature
+extraction is provided by TEN's native library. This converter downloads, inspects and
+republishes the ONNX with a signature describing its IO.
 """
 from __future__ import annotations
 
@@ -50,8 +49,8 @@ def convert(out_dir: str = "scratch/ten") -> dict:
     card = common.make_card("ten-vad", UPSTREAM, "Apache-2.0", sig)
     card_path = os.path.join(out_dir, "README.md")
     with open(card_path, "w") as f:
-        f.write(card + "\n> **Note:** feature extraction uses TEN's native library; "
-                "the pure-ONNX path in vadonnx is experimental.\n")
+        f.write(card + "\n> Feature extraction (mel + pitch) is provided by TEN's "
+                "native library and is required to drive this graph.\n")
     return {"model": model, "signature": sig_path, "card": card_path, "repo": REPO}
 
 
