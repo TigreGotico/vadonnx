@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Virtual envs
+.venv/
+.venv-convert/
+venv/
+
+# Conversion scratch (downloaded upstream checkpoints, exported models)
+scratch/
+
+# Benchmark dataset downloads (large; fetched on demand) — keep results/ tracked
+benchmark/data/
+*.nemo
+*.ckpt
+*.pt
+
+# OS
+.DS_Store

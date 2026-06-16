@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vadonnx"
+dynamic = ["version"]
+description = "Load arbitrary Voice Activity Detection (VAD) models behind a unified ONNX API"
+license = {text = "Apache-2.0"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+authors = [{name = "JarbasAi", email = "jarbasai@mailfence.com"}]
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["vad", "voice activity detection", "onnx", "speech", "silero", "audio"]
+dependencies = [
+    "numpy",
+    "onnxruntime>=1.17",
+    "huggingface_hub",
+]
+
+[project.urls]
+Homepage = "https://github.com/TigreGotico/vadonnx"
+Repository = "https://github.com/TigreGotico/vadonnx"
+
+[project.scripts]
+vadonnx = "vadonnx.cli:main"
+
+[project.optional-dependencies]
+# FSMN backend feature frontend (kaldi-style fbank)
+fsmn = ["kaldi-native-fbank"]
+# microphone streaming examples
+mic = ["sounddevice"]
+# high-quality resampling (otherwise numpy linear interpolation is used)
+resample = ["scipy"]
+# all runtime optionals
+all = ["kaldi-native-fbank", "sounddevice", "scipy"]
+# test deps — NO heavy ML deps; tests run real inference on the bundled model
+test = ["pytest", "pytest-cov"]
+# model conversion / publishing (maintainer only)
+convert = ["onnx", "huggingface_hub", "requests"]
+convert-marblenet = ["vadonnx[convert]", "nemo_toolkit[asr]", "torch"]
+convert-speechbrain = ["vadonnx[convert]", "speechbrain", "torch"]
+
+[tool.setuptools.dynamic]
+version = {attr = "vadonnx.version.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["vadonnx*"]
+
+[tool.setuptools.package-data]
+"vadonnx" = ["data/*.onnx", "data/*.json", "data/*.npz", "data/*.npy"]

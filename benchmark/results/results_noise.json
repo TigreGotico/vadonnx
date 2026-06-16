@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "snr_db": 5.0,
+    "n_utts": 60,
+    "categories": [
+      "animals",
+      "nature/water",
+      "human non-speech",
+      "interior/domestic",
+      "exterior/urban"
+    ]
+  },
+  "models": {
+    "silero": {
+      "animals": 0.9479256356681369,
+      "nature/water": 0.9238238390930521,
+      "human non-speech": 0.9293633939202791,
+      "interior/domestic": 0.9537876637418903,
+      "exterior/urban": 0.9289121589488489
+    },
+    "marblenet": {
+      "animals": 0.9708678072721707,
+      "nature/water": 0.9501502012547096,
+      "human non-speech": 0.9423544454873856,
+      "interior/domestic": 0.9606544427721508,
+      "exterior/urban": 0.9548790459442491
+    },
+    "fsmn": {
+      "animals": 0.9296361693729505,
+      "nature/water": 0.9102784923128471,
+      "human non-speech": 0.8941505947681209,
+      "interior/domestic": 0.9360139420651334,
+      "exterior/urban": 0.9177127808288884
+    },
+    "speechbrain": {
+      "animals": 0.6820723100390105,
+      "nature/water": 0.66942019331793,
+      "human non-speech": 0.6581301182728593,
+      "interior/domestic": 0.6920529690126511,
+      "exterior/urban": 0.6650709956932621
+    },
+    "pyannote": {
+      "animals": 0.9772532059657854,
+      "nature/water": 0.9825914069681165,
+      "human non-speech": 0.9697454646125234,
+      "interior/domestic": 0.9748989201060313,
+      "exterior/urban": 0.9776952727815822
+    },
+    "webrtc": {
+      "animals": 0.6687896706941953,
+      "nature/water": 0.6433057061896423,
+      "human non-speech": 0.6451749666210015,
+      "interior/domestic": 0.6725980025627538,
+      "exterior/urban": 0.6407873064316085
+    },
+    "energy": {
+      "animals": 0.815534869808408,
+      "nature/water": 0.785656280967793,
+      "human non-speech": 0.7725641612440437,
+      "interior/domestic": 0.8141683190430523,
+      "exterior/urban": 0.7808442903661046
+    }
+  }
+}

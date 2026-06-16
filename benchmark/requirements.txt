@@ -1,0 +1,5 @@
+# benchmark-only deps (on top of `vadonnx[fsmn]`)
+matplotlib
+scikit-learn
+soundfile
+tqdm
