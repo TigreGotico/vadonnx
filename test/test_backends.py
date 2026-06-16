@@ -36,7 +36,7 @@ def test_specs_have_repo_and_revision():
 
 def test_bundled_feature_assets_present():
     for fn in ("silero_vad.onnx", "fsmn_cmvn.npz",
-               "marblenet_mel_fb.npy", "marblenet_window.npy",
+               "marblenet_mel_fb.npy", "marblenet_window.npy", "ten_vad_coeff.npz",
                "sb_vad_mel_fb.npy", "sb_vad_window.npy"):
         assert os.path.isfile(os.path.join(data_dir(), fn)), fn
 

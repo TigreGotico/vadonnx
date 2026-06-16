@@ -29,7 +29,7 @@ def test_download_silero_from_hf(tmp_path, speech_audio):
 
 
 @pytest.mark.parametrize("name", ["fsmn", "marblenet", "marblenet-int8",
-                                  "speechbrain", "silero-op15", "pyannote", "pyannote-int8"])
+                                  "speechbrain", "silero-op15", "pyannote", "pyannote-int8", "ten"])
 def test_remote_backends_detect_speech(name, speech_audio, tmp_path):
     """Download each published model and confirm it detects speech in the clip."""
     from vadonnx import load_vad

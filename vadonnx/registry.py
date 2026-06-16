@@ -92,7 +92,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         filename="ten-vad.onnx",
         revision="225df9e0b79788bb5ee037e62e7fb22f7993c882",
         license="Apache-2.0",
-        description="TEN VAD; feature extraction provided by TEN's native library.",
+        description="TEN VAD (mel + autocorrelation-pitch frontend).",
     ),
     "fsmn": ModelSpec(
         name="fsmn",

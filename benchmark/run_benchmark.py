@@ -23,7 +23,7 @@ from baselines import load_any
 HERE = os.path.dirname(__file__)
 DATA = os.path.join(HERE, "data")
 SNRS = [None, 20, 15, 10, 5, 0]          # None = clean
-DEFAULT_MODELS = ["silero", "marblenet", "marblenet-int8", "fsmn", "fsmn-quant", "speechbrain", "pyannote",
+DEFAULT_MODELS = ["silero", "marblenet", "marblenet-int8", "fsmn", "fsmn-quant", "speechbrain", "pyannote", "ten",
                   "webrtc", "energy"]
 
 

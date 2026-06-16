@@ -15,7 +15,7 @@ between `vadonnx` and the upstream reference implementation on the same audio.
 | `pyannote` / `pyannote-int8` | 16k | 17 ms | MAE 0 | MIT |
 | `fsmn` / `fsmn-quant` | 16k | 10 ms | tracks upstream | MIT |
 | `speechbrain` | 16k | 10 ms | MAE 0 | Apache-2.0 |
-| `ten` | 16k | — | feature extractor not included | Apache-2.0 |
+| `ten` | 16k | 16 ms | mel exact, pitch approximated | Apache-2.0 |
 
 ## `silero` / `silero-8k` / `silero-op15`
 
@@ -64,10 +64,13 @@ single-speaker audio it labels low-level ambient sound as active, so the default
 ## `ten`
 
 [TEN VAD](https://github.com/TEN-framework/ten-vad). The ONNX graph consumes a
-precomputed `[B, 3, 41]` mel+pitch feature tensor and four recurrent states; feature
-extraction is provided by TEN's native library and is not reproduced here, so the model
-is not driven through the ONNX API — `load_vad("ten")` raises with that explanation. The
-ONNX and its signature are published for direct use with TEN's own feature pipeline.
+`[B, 3, 41]` mel+pitch feature tensor and four recurrent states, fed every 256-sample
+hop. The frontend is computed in numpy: preemphasis (0.97), Hann-768 STFT zero-padded to
+1024, power spectrum, 40-band HTK-triangular mel with `log(sum(power·filter)/32768² +
+1e-20)`, per-feature (mean, std) normalization, and a pitch estimate as the 41st feature.
+The mel branch reproduces the upstream C implementation exactly; the pitch feature uses
+an autocorrelation estimate in place of TEN's native pitch tracker. The mel mean/std and
+STFT window are bundled in the wheel.
 
 ## Choosing
 

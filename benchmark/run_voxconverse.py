@@ -18,7 +18,7 @@ import metrics as M
 
 HERE = os.path.dirname(__file__)
 DATA = os.path.join(HERE, "data")
-DEFAULT_MODELS = ["silero", "marblenet", "fsmn", "speechbrain", "pyannote", "webrtc", "energy"]
+DEFAULT_MODELS = ["silero", "marblenet", "fsmn", "speechbrain", "pyannote", "ten", "webrtc", "energy"]
 
 
 def main():
