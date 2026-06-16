@@ -56,7 +56,9 @@ segments = vad.get_speech_segments(
 
 ```python
 from vadonnx import list_models
-print(list_models())            # ['fsmn', 'fsmn-quant', 'marblenet', 'silero', 'silero-8k', 'ten']
+print(list_models())
+# ['fsmn', 'fsmn-quant', 'marblenet', 'marblenet-int8', 'pyannote', 'pyannote-int8',
+#  'silero', 'silero-8k', 'silero-op15', 'speechbrain', 'ten']
 
 vad = load_vad("silero-8k")     # 8 kHz variant
 ```

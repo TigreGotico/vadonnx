@@ -6,7 +6,7 @@ Load a VAD model behind the unified API.
 
 | arg | meaning |
 |-----|---------|
-| `name` | model name (`"silero"`, `"silero-8k"`, `"ten"`, `"fsmn"`, `"fsmn-quant"`, `"marblenet"`), a local `.onnx` path, or an `http(s)://` URL |
+| `name` | model name (`"silero"`, `"silero-op15"`, `"silero-8k"`, `"marblenet"`/`-int8`, `"pyannote"`/`-int8`, `"fsmn"`/`-quant`, `"speechbrain"`, `"ten"`), a local `.onnx` path, or an `http(s)://` URL |
 | `signature` | `IOSignature` or dict; required for a raw `.onnx` without a `<model>.signature.json` sidecar |
 | `threshold` | activation threshold (default 0.5) |
 | `neg_threshold` | deactivation threshold (default `threshold - 0.15`) |

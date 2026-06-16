@@ -9,3 +9,4 @@
 - [Conversion](conversion.md) — how models are exported and published.
 - [Licensing](licensing.md) — per-model license obligations.
 - [API reference](api.md) — full surface.
+- [Benchmark](../benchmark/README.md) — accuracy/robustness vs datasets + classical baselines.
