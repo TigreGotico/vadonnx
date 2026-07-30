@@ -1,7 +1,7 @@
 # Backends
 
 Every model is exposed through the same `VADModel` API. `silero` is bundled in the
-wheel; the others download from the [`TigreGotico`](https://huggingface.co/TigreGotico)
+wheel. The others download from the [`TigreGotico`](https://huggingface.co/TigreGotico)
 HuggingFace org on first use and cache under `$XDG_DATA_HOME/vadonnx`. Each download is
 pinned to a specific revision.
 
@@ -22,14 +22,14 @@ between `vadonnx` and the upstream reference implementation on the same audio.
 [Silero VAD](https://github.com/snakers4/silero-vad) v6. Raw PCM, 32 ms frames (512
 samples at 16 kHz, 256 at 8 kHz) with a 64/32-sample context window carried across
 frames and a single recurrent state tensor. Bundled in the wheel and usable offline.
-`silero-op15` is the 16 kHz-only opset-15 build (smaller; for older ONNX Runtimes).
-Dynamic int8 quantization is not provided — it does not reduce the model size.
+`silero-op15` is the 16 kHz-only opset-15 build, smaller and for older ONNX Runtimes.
+Dynamic int8 quantization is not provided, because it does not reduce the model size.
 
 ## `marblenet` / `marblenet-int8`
 
 NVIDIA NeMo [Frame-VAD MarbleNet](https://huggingface.co/nvidia/frame_vad_multilingual_marblenet_v2.0),
-multilingual. Classifies 80-mel log-spectrogram features (preemphasis, centered STFT,
-NeMo's mel filterbank and window, `log(x + 5.96e-8)`); `P(speech) = softmax(logits)[1]`
+multilingual. It classifies 80-mel log-spectrogram features (preemphasis, centered STFT,
+NeMo's mel filterbank and window, `log(x + 5.96e-8)`), giving `P(speech) = softmax(logits)[1]`
 per 20 ms frame. The mel filterbank and window are bundled in the wheel. `marblenet-int8`
 is the dynamically quantized graph (~36% of the size). License obligations: see
 [licensing.md](licensing.md).
@@ -47,19 +47,19 @@ pyannote diarization pipelines.
 
 FunASR [FSMN-VAD](https://huggingface.co/funasr/fsmn-vad-onnx). Classifies kaldi-style
 fbank features (80-mel) stacked at low frame rate (`lfr_m=5`) and CMVN-normalized to a
-400-dim input, through a streaming FSMN with four recurrent caches;
+400-dim input, through a streaming FSMN with four recurrent caches, giving
 `P(speech) = 1 - softmax[0]` (silence is PDF id 0). The CMVN statistics are bundled in
-the wheel. Requires the `fsmn` extra (`kaldi-native-fbank`) for the fbank frontend:
+the wheel. It requires the `fsmn` extra (`kaldi-native-fbank`) for the fbank frontend:
 `uv pip install "vadonnx[fsmn]"`. `fsmn-quant` is the int8 graph.
 
 ## `speechbrain`
 
 [SpeechBrain CRDNN VAD](https://huggingface.co/speechbrain/vad-crdnn-libriparty),
-trained on LibriParty. Classifies 40-mel log-Fbank features (CNN → RNN → DNN → sigmoid)
+trained on LibriParty. It classifies 40-mel log-Fbank features (CNN, RNN, DNN, sigmoid)
 into a per-frame posterior at 10 ms resolution. The mel filter matrix and window are
-bundled in the wheel. Trained on overlapping cocktail-party speech; on clean
-single-speaker audio it labels low-level ambient sound as active, so the default
-`threshold` is 0.7.
+bundled in the wheel. The training data has overlapping cocktail-party speech, so on
+clean single-speaker audio the model labels low-level ambient sound as active. The
+default `threshold` is 0.7 to compensate.
 
 ## `ten`
 
@@ -83,3 +83,6 @@ STFT window are bundled in the wheel.
 | smallest footprint | `marblenet-int8` / `fsmn-quant` |
 
 Measured comparisons across datasets are in [the benchmark report](../benchmark/results/REPORT.md).
+
+---
+[← Custom models](custom_models.md) · [Home](README.md) · [Plugins →](plugins.md)

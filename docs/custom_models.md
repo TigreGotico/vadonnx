@@ -74,3 +74,6 @@ register_model(ModelSpec(
 ))
 vad = load_vad("my-vad")
 ```
+
+---
+[← Streaming](streaming.md) · [Home](README.md) · [Backends →](backends.md)

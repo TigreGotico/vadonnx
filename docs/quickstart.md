@@ -37,7 +37,7 @@ while chunk := mic.read():                 # chunk: int16 PCM bytes / numpy arra
         ...                                # speech in this chunk
 ```
 
-Chunks need not align to the model frame size — leftover samples are buffered.
+Chunks need not align to the model frame size. Leftover samples are buffered.
 
 ## Tuning
 
@@ -64,3 +64,6 @@ vad = load_vad("silero-8k")     # 8 kHz variant
 ```
 
 See [backends.md](backends.md) for the trade-offs and parity status of each model.
+
+---
+[← Installation](installation.md) · [Home](README.md) · [Streaming →](streaming.md)
