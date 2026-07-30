@@ -47,3 +47,6 @@ The `backend` field also accepts a dotted path (`"my_pkg.backend:MyVAD"`) direct
 
 Built-in models win over registered ones, which win over plugin-provided ones, on a
 name collision. `list_models()` includes everything discovered.
+
+---
+[← Backends](backends.md) · [Home](README.md) · [Conversion →](conversion.md)
