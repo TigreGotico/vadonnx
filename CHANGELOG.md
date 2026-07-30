@@ -1,13 +1,12 @@
 # Changelog
 
-## [0.1.0a2](https://github.com/TigreGotico/vadonnx/tree/0.1.0a2) (2026-06-16)
+## [0.1.1a1](https://github.com/TigreGotico/vadonnx/tree/0.1.1a1) (2026-07-30)
 
-[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/21ac17d741759b1c8262065ba896e78b3740809f...0.1.0a2)
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.1.0...0.1.1a1)
 
 **Merged pull requests:**
 
-- ci: modernize release workflows for PyPI release [\#4](https://github.com/TigreGotico/vadonnx/pull/4) ([JarbasAl](https://github.com/JarbasAl))
-- Configure Renovate [\#1](https://github.com/TigreGotico/vadonnx/pull/1) ([renovate[bot]](https://github.com/apps/renovate))
+- docs: rewrite README in Simplified Technical English [\#6](https://github.com/TigreGotico/vadonnx/pull/6) ([JarbasAl](https://github.com/JarbasAl))
 
 
 

@@ -1,8 +1,8 @@
 # vadonnx
 
-Load arbitrary **Voice Activity Detection** models behind a single, unified API — every
-model runs through [ONNX Runtime](https://onnxruntime.ai/). One streaming/​batch
-interface, one audio-format story, pluggable models.
+Load arbitrary **Voice Activity Detection** models behind a single, unified API. Every
+model runs through [ONNX Runtime](https://onnxruntime.ai/). You get one streaming and
+batch interface, one audio-format story, and pluggable models.
 
 ```python
 from vadonnx import load_vad
@@ -15,19 +15,19 @@ segments = vad.get_speech_segments(audio, sample_rate=16000)
 
 ## Why
 
-Every VAD ships its own loader, audio format, feature pipeline and state handling.
-`vadonnx` hides that behind one `VADModel` interface: feed it audio (raw `int16`
+Every VAD ships its own loader, audio format, feature pipeline, and state handling.
+`vadonnx` hides that behind one `VADModel` interface. Feed it audio (raw `int16`
 bytes, numpy arrays, any sample rate) and get back per-frame speech probabilities or
-ready-made speech segments. Models are described *declaratively* by an
-[`IOSignature`](docs/custom_models.md), so a single generic engine drives most of them
-and you can point the same API at any custom `.onnx` file.
+ready-made speech segments. An [`IOSignature`](docs/custom_models.md) describes each
+model declaratively, so a single generic engine drives most of them, and you can point
+the same API at any custom `.onnx` file.
 
-- **Lightweight runtime** — only `numpy`, `onnxruntime`, `huggingface_hub`.
-- **Offline by default** — a small Silero model is bundled in the wheel.
-- **Streaming and batch** — `process_chunk()` for live audio, `get_speech_segments()` /
+- **Lightweight runtime**: only `numpy`, `onnxruntime`, and `huggingface_hub`.
+- **Offline by default**: a small Silero model is bundled in the wheel.
+- **Streaming and batch**: `process_chunk()` for live audio, `get_speech_segments()` and
   `probabilities()` for whole buffers.
-- **Bring your own model** — load any ONNX VAD by path/URL with a signature.
-- **Extensible** — third parties register backends/models via entry points.
+- **Bring your own model**: load any ONNX VAD by path or URL with a signature.
+- **Extensible**: third parties register backends and models through entry points.
 
 ## Install
 
@@ -43,9 +43,9 @@ uv pip install "vadonnx[mic]"   # + microphone examples
 | `silero` / `silero-8k` / `silero-op15` | 16k / 8k / 16k | MAE 0 | bundled default, raw PCM |
 | `marblenet` / `marblenet-int8` | 16k | MAE 4e-4 | NVIDIA NeMo Frame-VAD, multilingual ([license](docs/licensing.md)) |
 | `pyannote` / `pyannote-int8` | 16k | MAE 0 | pyannote segmentation-3.0, windowed |
-| `fsmn` / `fsmn-quant` | 16k | tracks upstream | FunASR FSMN-VAD; needs `vadonnx[fsmn]` |
+| `fsmn` / `fsmn-quant` | 16k | tracks upstream | FunASR FSMN-VAD, needs `vadonnx[fsmn]` |
 | `speechbrain` | 16k | MAE 0 | SpeechBrain CRDNN, LibriParty-trained |
-| `ten` | 16k | — | feature extractor provided by TEN's native library |
+| `ten` | 16k | n/a | feature extractor provided by TEN's native library |
 
 See [docs/backends.md](docs/backends.md) for per-model detail and the
 [benchmark](benchmark/results/REPORT.md) for measured comparisons across datasets,
@@ -75,7 +75,12 @@ vadonnx segment speech.wav         # print detected speech segments of a WAV
 - [Licensing](docs/licensing.md)
 - [API reference](docs/api.md)
 
+## Related projects
+
+- [TigreGotico/phoonnx](https://github.com/TigreGotico/phoonnx): multilingual phonemization and ONNX text-to-speech, the TTS counterpart to `vadonnx`.
+- [TigreGotico/onnx-asr](https://github.com/TigreGotico/onnx-asr): offline speech recognition on ONNX models.
+
 ## License
 
-Apache-2.0. Bundled/downloaded model weights retain their upstream licenses — see
+Apache-2.0. Bundled and downloaded model weights retain their upstream licenses. See
 [docs/licensing.md](docs/licensing.md).
