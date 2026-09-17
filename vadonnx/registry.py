@@ -22,6 +22,8 @@ class ModelSpec:
     hf_repo: Optional[str] = None    # e.g. "TigreGotico/silero-vad-onnx"
     filename: str = "model.onnx"
     revision: Optional[str] = None   # pinned commit sha for reproducibility
+    url: Optional[str] = None        # direct download pinned to an immutable commit URL
+    sha256: Optional[str] = None     # expected digest of the `url` download
     bundled: Optional[str] = None    # filename under vadonnx/data/ shipped in the wheel
     license: str = ""
     extras: List[str] = field(default_factory=list)
@@ -40,6 +42,9 @@ _SILERO_KW = dict(
     prob_extract="scalar",
     license="MIT",
 )
+
+_PULSEVAD_URL = ("https://raw.githubusercontent.com/AydinAdnan/PulseVAD/"
+                 "af25e79d66830a3fee74541812721f6158fc92b5/pulsevad/data/")
 
 BUILTIN: Dict[str, ModelSpec] = {
     "silero": ModelSpec(
@@ -194,6 +199,51 @@ BUILTIN: Dict[str, ModelSpec] = {
         license="MIT",
         description="Quantized (int8) pyannote segmentation-3.0 VAD.",
     ),
+    # PulseVAD ships its ONNX graphs in its GitHub repository, not on HuggingFace.
+    # The URLs pin the commit of the upstream v0.1.3 tag and each file is checked by
+    # its sha256 digest.
+    "pulsevad": ModelSpec(
+        name="pulsevad",
+        signature=IOSignature(
+            sample_rate=16000, frame_size=3200, stateful=False,
+            feature="logmel", audio_input="log_mel", audio_layout="BFT",
+            prob_output="logits", prob_extract="index:1", license="MIT",
+        ),
+        backend="pulsevad",
+        filename="pulsevad_2.1k_int8.onnx",
+        url=_PULSEVAD_URL + "pulsevad_2.1k_int8.onnx",
+        sha256="416061347a1e723ed15163acd51006bf3c513b27bb9f57d85e2c694cc44b8389",
+        license="MIT",
+        description="PulseVAD 2.1k-parameter int8 CNN, causal 200 ms windows.",
+    ),
+    "pulsevad-fp32": ModelSpec(
+        name="pulsevad-fp32",
+        signature=IOSignature(
+            sample_rate=16000, frame_size=3200, stateful=False,
+            feature="logmel", audio_input="log_mel", audio_layout="BFT",
+            prob_output="logits", prob_extract="index:1", license="MIT",
+        ),
+        backend="pulsevad",
+        filename="pulsevad_2.1k.onnx",
+        url=_PULSEVAD_URL + "pulsevad_2.1k.onnx",
+        sha256="2b8c4874fc4ecd64916fc8726e2a8281b1cb9457c21f42a23a9776a4d538c665",
+        license="MIT",
+        description="PulseVAD 2.1k-parameter float32 CNN, causal 200 ms windows.",
+    ),
+    "pulsevad-81k": ModelSpec(
+        name="pulsevad-81k",
+        signature=IOSignature(
+            sample_rate=16000, frame_size=3200, stateful=False,
+            feature="logmel", audio_input="log_mel", audio_layout="BFT",
+            prob_output="logits", prob_extract="index:1", license="MIT",
+        ),
+        backend="pulsevad",
+        filename="pulsevad_teacher_81k.onnx",
+        url=_PULSEVAD_URL + "pulsevad_teacher_81k.onnx",
+        sha256="24d81c0d542916f0657b612a3098970f29fa95e8193867dac229ccd7fe007d80",
+        license="MIT",
+        description="PulseVAD 81k-parameter teacher CNN, causal 200 ms windows.",
+    ),
 }
 
 
@@ -205,9 +255,11 @@ def _backends() -> Dict[str, type]:
     from .backends.marblenet import MarbleVAD
     from .backends.speechbrain import SbVAD
     from .backends.pyannote import PyannoteVAD
+    from .backends.pulsevad import PulseVAD
 
     return {"onnx": OnnxVAD, "ten": TenVAD, "fsmn": FsmnVAD,
-            "marblenet": MarbleVAD, "speechbrain": SbVAD, "pyannote": PyannoteVAD}
+            "marblenet": MarbleVAD, "speechbrain": SbVAD, "pyannote": PyannoteVAD,
+            "pulsevad": PulseVAD}
 
 
 _REGISTERED: Dict[str, ModelSpec] = {}

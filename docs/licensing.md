@@ -11,6 +11,7 @@ their upstream licenses. Your obligations depend on which model you load.
 | `speechbrain` | Apache-2.0 (SpeechBrain) | freely redistributable |
 | `pyannote` / `pyannote-int8` | MIT | community ONNX of a gated upstream, see below |
 | `marblenet` / `marblenet-int8` | **NVIDIA Open Model License** | see below |
+| `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | MIT | freely redistributable, see below |
 
 ## Silero / FSMN (MIT), TEN / SpeechBrain (Apache-2.0)
 
@@ -32,6 +33,30 @@ distributed under the **NVIDIA Open Model License**. Commercial use is permitted
 you are responsible for complying with that license, including its attribution terms.
 The mirrored repo's model card reproduces the license and links upstream. Review the
 license before redistributing the model or using it commercially.
+
+## PulseVAD (MIT)
+
+The PulseVAD weights are MIT-licensed, Copyright (c) 2026 Aydin Adnan. `vadonnx` does not
+bundle or mirror them. It downloads them from the upstream repository at a pinned
+commit. If you redistribute the files, include the upstream
+[LICENSE](https://github.com/AydinAdnan/PulseVAD/blob/af25e79d66830a3fee74541812721f6158fc92b5/LICENSE).
+
+The upstream
+[ATTRIBUTION.md](https://github.com/AydinAdnan/PulseVAD/blob/af25e79d66830a3fee74541812721f6158fc92b5/ATTRIBUTION.md)
+lists the training data and tools:
+
+- LibriSpeech train-clean-100 (CC BY 4.0), Vassil Panayotov, Guoguo Chen, Daniel Povey,
+  Sanjeev Khudanpur.
+- Common Voice (CC0), Mozilla.
+- Multilingual LibriSpeech (CC BY 4.0).
+- VoxLingua107 (CC BY 4.0).
+- MUSAN noise and music (CC BY 4.0), David Snyder, Guoguo Chen, Daniel Povey.
+- DNS Challenge noise, Interspeech 2020 (CC BY 4.0 / CC0 subset), Chandan K. A. Reddy et al.
+- Synthetic wind noise (Mirabilii 2022 algorithm), synthesized locally.
+- Silero VAD v5/v6 (MIT), used only to label the training audio.
+
+Upstream states that it did not use the Silero labeled dataset, LibriVAD or the kiloVAD
+checkpoints, which have non-commercial licenses.
 
 ## Bundled assets
 
