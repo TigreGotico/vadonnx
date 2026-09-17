@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0a1](https://github.com/TigreGotico/vadonnx/tree/0.2.0a1) (2026-09-17)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.1.1a1...0.2.0a1)
+
+**Merged pull requests:**
+
+- feat: add PulseVAD models [\#8](https://github.com/TigreGotico/vadonnx/pull/8) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.1.1a1](https://github.com/TigreGotico/vadonnx/tree/0.1.1a1) (2026-07-30)
 
 [Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.1.0...0.1.1a1)
