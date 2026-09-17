@@ -16,6 +16,7 @@ between `vadonnx` and the upstream reference implementation on the same audio.
 | `fsmn` / `fsmn-quant` | 16k | 10 ms | tracks upstream | MIT |
 | `speechbrain` | 16k | 10 ms | MAE 0 | Apache-2.0 |
 | `ten` | 16k | 16 ms | mel exact, pitch approximated | Apache-2.0 |
+| `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | 16k | 200 ms | MAE 2e-4 / 1.5e-7 / 2.4e-7 | MIT |
 
 ## `silero` / `silero-8k` / `silero-op15`
 
@@ -72,6 +73,31 @@ The mel branch reproduces the upstream C implementation exactly; the pitch featu
 an autocorrelation estimate in place of TEN's native pitch tracker. The mel mean/std and
 STFT window are bundled in the wheel.
 
+## `pulsevad` / `pulsevad-fp32` / `pulsevad-81k`
+
+[PulseVAD](https://github.com/AydinAdnan/PulseVAD) v0.1.3, a causal depthwise-separable
+CNN. It classifies one 200 ms window (3200 samples) at a time, with no overlap and no
+state across windows, and gives `P(speech) = sigmoid(logit[1] - logit[0])`. The numpy
+frontend follows upstream: preemphasis (0.97), waveform z-norm, centered STFT (Hann-400
+in `n_fft=512`, hop 160), a 64-band HTK mel filterbank with Slaney area normalization,
+`log(x + 1e-5)` and a per-band z-norm over the 21 frames. The filterbank is computed, not
+downloaded.
+
+- `pulsevad`: 2,118 parameters, int8 QDQ graph, 27 KB. Upstream default.
+- `pulsevad-fp32`: the same network as a float32 graph, 12 KB.
+- `pulsevad-81k`: the 81,090-parameter teacher, float32, 326 KB.
+
+The files are not on HuggingFace. `vadonnx` downloads them from the upstream commit
+`af25e79` (tag `v0.1.3`) and checks each sha256 digest before it caches the file.
+
+Parity is measured against upstream `predict_window` on `test/resources/speech.wav`
+(55 windows). The int8 gap comes from a float32 rounding difference in the computed
+filterbank, which the quantized graph amplifies. It is 60 times smaller than the gap
+between the upstream int8 and float32 models on the same audio (MAE 1.2e-2).
+
+The 2.1k models have a calibrated negative bias: on clean speech their probability stays
+near 0.7. Keep the threshold at 0.5.
+
 ## Choosing
 
 | need | model |
@@ -80,7 +106,7 @@ STFT window are bundled in the wheel.
 | multilingual | `marblenet` |
 | diarization-aligned | `pyannote` |
 | FunASR-compatible pipeline | `fsmn` |
-| smallest footprint | `marblenet-int8` / `fsmn-quant` |
+| smallest footprint | `pulsevad` / `marblenet-int8` / `fsmn-quant` |
 
 Measured comparisons across datasets are in [the benchmark report](../benchmark/results/REPORT.md).
 

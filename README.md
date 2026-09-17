@@ -46,6 +46,7 @@ uv pip install "vadonnx[mic]"   # + microphone examples
 | `fsmn` / `fsmn-quant` | 16k | tracks upstream | FunASR FSMN-VAD, needs `vadonnx[fsmn]` |
 | `speechbrain` | 16k | MAE 0 | SpeechBrain CRDNN, LibriParty-trained |
 | `ten` | 16k | n/a | feature extractor provided by TEN's native library |
+| `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | 16k | MAE 2e-4 / 1.5e-7 / 2.4e-7 | PulseVAD tiny causal CNN, 200 ms windows |
 
 See [docs/backends.md](docs/backends.md) for per-model detail and the
 [benchmark](benchmark/results/REPORT.md) for measured comparisons across datasets,
@@ -53,7 +54,8 @@ including WebRTC and energy baselines.
 
 Models other than the bundled Silero are downloaded on first use from the
 [`TigreGotico`](https://huggingface.co/TigreGotico) HuggingFace org and cached under
-`$XDG_DATA_HOME/vadonnx`. See [docs/backends.md](docs/backends.md) for per-model detail
+`$XDG_DATA_HOME/vadonnx`. The PulseVAD models download from a pinned commit of the
+upstream GitHub repository, and a sha256 digest checks each file. See [docs/backends.md](docs/backends.md) for per-model detail
 and parity notes.
 
 ## CLI
