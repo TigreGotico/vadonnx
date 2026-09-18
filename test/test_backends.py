@@ -117,3 +117,11 @@ def test_restricted_weights_are_not_labelled_permissive():
         assert BUILTIN[name].signature.license == BUILTIN[name].license
     for name in ("ten", "fsmn", "fsmn-quant"):
         assert BUILTIN[name].license not in ("MIT", "Apache-2.0")
+
+
+def test_every_spec_license_matches_its_signature():
+    # the spec and its IOSignature carry the same string; a find-and-replace on
+    # one line and not the other once relabelled pyannote as a FunASR model
+    for name, spec in BUILTIN.items():
+        assert spec.license, name
+        assert spec.signature.license == spec.license, name

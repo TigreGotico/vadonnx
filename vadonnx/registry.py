@@ -185,7 +185,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         signature=IOSignature(
             sample_rate=16000, frame_size=272, stateful=False,
             audio_input="input_values", audio_layout="BT",
-            prob_output="logits", prob_extract="1-minus:0", license="FunASR Model License 1.1",
+            prob_output="logits", prob_extract="1-minus:0", license="MIT",
         ),
         backend="pyannote",
         hf_repo="TigreGotico/pyannote-segmentation-3.0-onnx",
@@ -199,7 +199,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         signature=IOSignature(
             sample_rate=16000, frame_size=272, stateful=False,
             audio_input="input_values", audio_layout="BT",
-            prob_output="logits", prob_extract="1-minus:0", license="FunASR Model License 1.1",
+            prob_output="logits", prob_extract="1-minus:0", license="MIT",
         ),
         backend="pyannote",
         hf_repo="TigreGotico/pyannote-segmentation-3.0-onnx",
