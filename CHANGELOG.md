@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1a1](https://github.com/TigreGotico/vadonnx/tree/0.2.1a1) (2026-09-18)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.0a1...0.2.1a1)
+
+**Merged pull requests:**
+
+- fix: state the real licence of the ten and fsmn weights [\#10](https://github.com/TigreGotico/vadonnx/pull/10) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.2.0a1](https://github.com/TigreGotico/vadonnx/tree/0.2.0a1) (2026-09-17)
 
 [Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.1.1a1...0.2.0a1)
