@@ -53,6 +53,12 @@ fbank features (80-mel) stacked at low frame rate (`lfr_m=5`) and CMVN-normalize
 the wheel. It requires the `fsmn` extra (`kaldi-native-fbank`) for the fbank frontend:
 `uv pip install "vadonnx[fsmn]"`. `fsmn-quant` is the int8 graph.
 
+The default threshold is **0.8**, not 0.5: FunASR calls a frame speech only when
+`p_speech >= p_silence + 0.6` (its `speech_noise_thres`), which with one silence pdf is
+`p_speech >= 0.8`. The model answers up to 0.635 on digital silence, so a 0.5
+threshold fires on nothing at all; FunASR's own pipeline returns no segment there,
+and neither does vadonnx at 0.8. Pass `threshold=` to change it.
+
 ## `speechbrain`
 
 [SpeechBrain CRDNN VAD](https://huggingface.co/speechbrain/vad-crdnn-libriparty),
