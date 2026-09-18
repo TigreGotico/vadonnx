@@ -13,9 +13,9 @@ between `vadonnx` and the upstream reference implementation on the same audio.
 | `silero` / `silero-8k` / `silero-op15` | 16k / 8k / 16k | 32 ms | MAE 0 | MIT |
 | `marblenet` / `marblenet-int8` | 16k | 20 ms | MAE 4e-4 | NVIDIA Open Model License |
 | `pyannote` / `pyannote-int8` | 16k | 17 ms | MAE 0 | MIT |
-| `fsmn` / `fsmn-quant` | 16k | 10 ms | tracks upstream | MIT |
+| `fsmn` / `fsmn-quant` | 16k | 10 ms | tracks upstream | FunASR Model License v1.1 |
 | `speechbrain` | 16k | 10 ms | MAE 0 | Apache-2.0 |
-| `ten` | 16k | 16 ms | mel exact, pitch approximated | Apache-2.0 |
+| `ten` | 16k | 16 ms | mel exact, pitch approximated | Apache-2.0 + TEN conditions |
 | `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | 16k | 200 ms | MAE 2e-4 / 1.5e-7 / 2.4e-7 | MIT |
 
 ## `silero` / `silero-8k` / `silero-op15`

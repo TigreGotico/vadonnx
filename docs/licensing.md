@@ -6,17 +6,45 @@ their upstream licenses. Your obligations depend on which model you load.
 | model | license | redistribution |
 |-------|---------|----------------|
 | `silero` / `silero-8k` / `silero-op15` | MIT | freely redistributable (bundled in the wheel) |
-| `ten` | Apache-2.0 | freely redistributable |
-| `fsmn` / `fsmn-quant` | MIT (FunASR) | freely redistributable |
+| `ten` | Apache-2.0 **with additional conditions** (Agora) | restricted, see below |
+| `fsmn` / `fsmn-quant` | FunASR Model Open Source License v1.1 | attribution required, see below |
 | `speechbrain` | Apache-2.0 (SpeechBrain) | freely redistributable |
 | `pyannote` / `pyannote-int8` | MIT | community ONNX of a gated upstream, see below |
 | `marblenet` / `marblenet-int8` | **NVIDIA Open Model License** | see below |
 | `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | MIT | freely redistributable, see below |
 
-## Silero / FSMN (MIT), TEN / SpeechBrain (Apache-2.0)
+## Silero (MIT), SpeechBrain (Apache-2.0)
 
 Permissive. The ONNX files are mirrored on the `TigreGotico` HF org with model cards
 attributing the upstream source and license.
+
+## TEN VAD: Apache-2.0 with additional conditions
+
+The [ten-vad LICENSE](https://github.com/TEN-framework/ten-vad/blob/main/LICENSE) is
+Apache-2.0 plus conditions set by Agora, which is why GitHub shows it as
+"NOASSERTION" rather than Apache-2.0:
+
+1. You may not deploy ten-vad in a way that competes with Agora's offerings, or that
+   lets third parties develop or deploy applications with it.
+2. You may deploy it only to build your own applications, for your benefit and that of
+   your direct end users. "Powered by ten-vad" may be shown in your documentation.
+3. Derivative works stay under these terms.
+
+This is not a permissive license. Read it before you ship a product on `ten`, and do
+not redistribute the graph as a component for others to build on. The
+`TigreGotico/ten-vad-onnx` mirror carries the full text and these conditions in its
+card; vadonnx downloads it for your own application only.
+
+## FSMN-VAD: FunASR Model Open Source License
+
+`fsmn` and `fsmn-quant` are FunASR model weights. The FunASR **code** is MIT; the
+**weights** are covered by the
+[FunASR Model Open Source License Agreement v1.1](https://github.com/modelscope/FunASR/blob/main/MODEL_LICENSE),
+which the upstream `funasr/fsmn-vad-onnx` card summarises as `apache-2.0`. The
+agreement requires attribution of the source and the model names, forbids
+denigration of FunASR on pain of termination, and may be revised by Alibaba with
+automatic effect. The `TigreGotico/fsmn-vad-onnx` card and the bundled
+`fsmn_cmvn.npz` statistics carry that attribution.
 
 ## pyannote (MIT, gated upstream)
 
@@ -62,7 +90,7 @@ checkpoints, which have non-commercial licenses.
 
 The wheel bundles only:
 - `silero_vad.onnx` (MIT): the offline default model.
-- `fsmn_cmvn.npz`: CMVN statistics derived from FunASR (MIT).
+- `fsmn_cmvn.npz`: CMVN statistics derived from the FunASR FSMN-VAD model (FunASR Model Open Source License v1.1, attribution above).
 - `marblenet_mel_fb.npy` / `marblenet_window.npy`: the mel filterbank and window extracted
   from the NeMo MarbleNet preprocessor (NVIDIA Open Model License).
 

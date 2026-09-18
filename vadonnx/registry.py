@@ -90,13 +90,16 @@ BUILTIN: Dict[str, ModelSpec] = {
         signature=IOSignature(
             sample_rate=16000, frame_size=256, stateful=True,
             audio_input="input", audio_layout="BT",
-            prob_output=0, prob_extract="scalar", license="Apache-2.0",
+            prob_output=0, prob_extract="scalar", license="Apache-2.0 with TEN additional conditions",
         ),
         backend="ten",
         hf_repo="TigreGotico/ten-vad-onnx",
         filename="ten-vad.onnx",
         revision="225df9e0b79788bb5ee037e62e7fb22f7993c882",
-        license="Apache-2.0",
+        # Apache-2.0 plus Agora's additional conditions: no deployment that
+        # competes with Agora or lets third parties build on it, own
+        # applications and their direct end users only. See docs/licensing.md.
+        license="Apache-2.0 with TEN additional conditions",
         description="TEN VAD (mel + autocorrelation-pitch frontend).",
     ),
     "fsmn": ModelSpec(
@@ -104,13 +107,16 @@ BUILTIN: Dict[str, ModelSpec] = {
         signature=IOSignature(
             sample_rate=16000, frame_size=160, stateful=True,
             feature="fbank", audio_input="speech", audio_layout="BTF",
-            prob_output="logits", prob_extract="1-minus:0", license="MIT",
+            prob_output="logits", prob_extract="1-minus:0", license="FunASR Model License 1.1",
         ),
         backend="fsmn",
         hf_repo="TigreGotico/fsmn-vad-onnx",
         filename="model.onnx",
         revision="2216bade214cd80e818bce2c823c878dba117898",
-        license="MIT",
+        # The weights are under the FunASR Model Open Source License Agreement
+        # v1.1 (attribution, no denigration, revisable by Alibaba); MIT is the
+        # FunASR code licence, not the weights. See docs/licensing.md.
+        license="FunASR Model License 1.1",
         extras=["kaldi-native-fbank"],
         description="FunASR FSMN-VAD with a fbank+LFR+CMVN frontend.",
     ),
@@ -119,13 +125,16 @@ BUILTIN: Dict[str, ModelSpec] = {
         signature=IOSignature(
             sample_rate=16000, frame_size=160, stateful=True,
             feature="fbank", audio_input="speech", audio_layout="BTF",
-            prob_output="logits", prob_extract="1-minus:0", license="MIT",
+            prob_output="logits", prob_extract="1-minus:0", license="FunASR Model License 1.1",
         ),
         backend="fsmn",
         hf_repo="TigreGotico/fsmn-vad-onnx",
         filename="model_quant.onnx",
         revision="2216bade214cd80e818bce2c823c878dba117898",
-        license="MIT",
+        # The weights are under the FunASR Model Open Source License Agreement
+        # v1.1 (attribution, no denigration, revisable by Alibaba); MIT is the
+        # FunASR code licence, not the weights. See docs/licensing.md.
+        license="FunASR Model License 1.1",
         extras=["kaldi-native-fbank"],
         description="Quantized (int8) FunASR FSMN-VAD.",
     ),
@@ -176,7 +185,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         signature=IOSignature(
             sample_rate=16000, frame_size=272, stateful=False,
             audio_input="input_values", audio_layout="BT",
-            prob_output="logits", prob_extract="1-minus:0", license="MIT",
+            prob_output="logits", prob_extract="1-minus:0", license="FunASR Model License 1.1",
         ),
         backend="pyannote",
         hf_repo="TigreGotico/pyannote-segmentation-3.0-onnx",
@@ -190,7 +199,7 @@ BUILTIN: Dict[str, ModelSpec] = {
         signature=IOSignature(
             sample_rate=16000, frame_size=272, stateful=False,
             audio_input="input_values", audio_layout="BT",
-            prob_output="logits", prob_extract="1-minus:0", license="MIT",
+            prob_output="logits", prob_extract="1-minus:0", license="FunASR Model License 1.1",
         ),
         backend="pyannote",
         hf_repo="TigreGotico/pyannote-segmentation-3.0-onnx",

@@ -43,9 +43,9 @@ uv pip install "vadonnx[mic]"   # + microphone examples
 | `silero` / `silero-8k` / `silero-op15` | 16k / 8k / 16k | MAE 0 | bundled default, raw PCM |
 | `marblenet` / `marblenet-int8` | 16k | MAE 4e-4 | NVIDIA NeMo Frame-VAD, multilingual ([license](docs/licensing.md)) |
 | `pyannote` / `pyannote-int8` | 16k | MAE 0 | pyannote segmentation-3.0, windowed |
-| `fsmn` / `fsmn-quant` | 16k | tracks upstream | FunASR FSMN-VAD, needs `vadonnx[fsmn]` |
+| `fsmn` / `fsmn-quant` | 16k | tracks upstream | FunASR FSMN-VAD, needs `vadonnx[fsmn]` ([license](docs/licensing.md)) |
 | `speechbrain` | 16k | MAE 0 | SpeechBrain CRDNN, LibriParty-trained |
-| `ten` | 16k | n/a | feature extractor provided by TEN's native library |
+| `ten` | 16k | n/a | feature extractor provided by TEN's native library ([license](docs/licensing.md), not permissive) |
 | `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | 16k | MAE 2e-4 / 1.5e-7 / 2.4e-7 | PulseVAD tiny causal CNN, 200 ms windows |
 
 See [docs/backends.md](docs/backends.md) for per-model detail and the

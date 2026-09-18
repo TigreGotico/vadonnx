@@ -104,3 +104,16 @@ def test_pulsevad_frontend_shapes():
     assert feat.dtype == np.float32
     assert np.all(np.isfinite(feat))
     np.testing.assert_allclose(feat.mean(axis=1), 0.0, atol=1e-4)
+
+
+def test_restricted_weights_are_not_labelled_permissive():
+    # ten-vad is Apache-2.0 plus Agora's conditions, and the FSMN weights are under the
+    # FunASR Model Open Source License, not MIT. A bare permissive label here misleads
+    # anyone who ships on these models (T-2488).
+    assert BUILTIN["ten"].license == "Apache-2.0 with TEN additional conditions"
+    assert BUILTIN["ten"].signature.license == BUILTIN["ten"].license
+    for name in ("fsmn", "fsmn-quant"):
+        assert BUILTIN[name].license == "FunASR Model License 1.1"
+        assert BUILTIN[name].signature.license == BUILTIN[name].license
+    for name in ("ten", "fsmn", "fsmn-quant"):
+        assert BUILTIN[name].license not in ("MIT", "Apache-2.0")
