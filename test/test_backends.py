@@ -125,3 +125,13 @@ def test_every_spec_license_matches_its_signature():
     for name, spec in BUILTIN.items():
         assert spec.license, name
         assert spec.signature.license == spec.license, name
+
+def test_fsmn_default_threshold_is_funasr_rule():
+    # FunASR: speech when exp(log p_speech) >= exp(log p_sil) + speech_noise_thres (0.6),
+    # one silence pdf, so p_speech >= 0.8. Below that the model's answer on digital
+    # silence (0.635, T-2490) is silence, as in FunASR's own pipeline.
+    from vadonnx.backends.fsmn import FUNASR_SPEECH_THRESHOLD, FsmnVAD
+    import inspect
+    assert FUNASR_SPEECH_THRESHOLD == 0.8
+    assert inspect.signature(FsmnVAD.__init__).parameters["threshold"].default == 0.8
+    assert 0.635 < FUNASR_SPEECH_THRESHOLD - 0.15, "the deactivation threshold must also sit above the silence answer"

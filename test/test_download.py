@@ -38,3 +38,19 @@ def test_remote_backends_detect_speech(name, speech_audio, tmp_path):
     vad = load_vad(name, cache_dir=str(tmp_path))
     probs = vad.probabilities(audio, sample_rate=sr)
     assert probs.max() > 0.8
+
+
+@pytest.mark.parametrize("name", ["fsmn", "fsmn-quant"])
+def test_fsmn_is_silent_on_digital_silence_and_hears_speech(name, speech_audio, tmp_path):
+    """The model answers up to 0.635 on zeros; the default threshold keeps that silent (T-2490)."""
+    import numpy as np
+    from vadonnx import load_vad
+
+    vad = load_vad(name, cache_dir=str(tmp_path))
+    zeros = np.zeros(32000, dtype=np.float32)
+    probs = vad.probabilities(zeros, sample_rate=16000)
+    assert probs.max() < vad.threshold
+    assert vad.get_speech_segments(zeros, sample_rate=16000) == []
+    audio, sr = speech_audio
+    assert vad.probabilities(audio, sample_rate=sr).max() > vad.threshold
+    assert vad.get_speech_segments(audio, sample_rate=sr)
