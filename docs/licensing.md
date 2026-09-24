@@ -1,45 +1,101 @@
 # Licensing
 
 The `vadonnx` library code is **Apache-2.0**. Model weights downloaded or bundled keep
-their upstream licenses — your obligations depend on which model you load.
+their upstream licenses. Your obligations depend on which model you load.
 
 | model | license | redistribution |
 |-------|---------|----------------|
 | `silero` / `silero-8k` / `silero-op15` | MIT | freely redistributable (bundled in the wheel) |
-| `ten` | Apache-2.0 | freely redistributable |
-| `fsmn` / `fsmn-quant` | MIT (FunASR) | freely redistributable |
+| `ten` | Apache-2.0 **with additional conditions** (Agora) | restricted, see below |
+| `fsmn` / `fsmn-quant` | FunASR Model Open Source License v1.1 | attribution required, see below |
 | `speechbrain` | Apache-2.0 (SpeechBrain) | freely redistributable |
-| `pyannote` / `pyannote-int8` | MIT | community ONNX of a gated upstream; see below |
+| `pyannote` / `pyannote-int8` | MIT | community ONNX of a gated upstream, see below |
 | `marblenet` / `marblenet-int8` | **NVIDIA Open Model License** | see below |
+| `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | MIT | freely redistributable, see below |
 
-## Silero / FSMN (MIT), TEN / SpeechBrain (Apache-2.0)
+## Silero (MIT), SpeechBrain (Apache-2.0)
 
 Permissive. The ONNX files are mirrored on the `TigreGotico` HF org with model cards
 attributing the upstream source and license.
 
+## TEN VAD: Apache-2.0 with additional conditions
+
+The [ten-vad LICENSE](https://github.com/TEN-framework/ten-vad/blob/main/LICENSE) is
+Apache-2.0 plus conditions set by Agora, which is why GitHub shows it as
+"NOASSERTION" rather than Apache-2.0:
+
+1. You may not deploy ten-vad in a way that competes with Agora's offerings, or that
+   lets third parties develop or deploy applications with it.
+2. You may deploy it only to build your own applications, for your benefit and that of
+   your direct end users. "Powered by ten-vad" may be shown in your documentation.
+3. Derivative works stay under these terms.
+
+This is not a permissive license. Read it before you ship a product on `ten`, and do
+not redistribute the graph as a component for others to build on. The
+`TigreGotico/ten-vad-onnx` mirror carries the full text and these conditions in its
+card; vadonnx downloads it for your own application only.
+
+## FSMN-VAD: FunASR Model Open Source License
+
+`fsmn` and `fsmn-quant` are FunASR model weights. The FunASR **code** is MIT; the
+**weights** are covered by the
+[FunASR Model Open Source License Agreement v1.1](https://github.com/modelscope/FunASR/blob/main/MODEL_LICENSE),
+which the upstream `funasr/fsmn-vad-onnx` card summarises as `apache-2.0`. The
+agreement requires attribution of the source and the model names, forbids
+denigration of FunASR on pain of termination, and may be revised by Alibaba with
+automatic effect. The `TigreGotico/fsmn-vad-onnx` card and the bundled
+`fsmn_cmvn.npz` statistics carry that attribution.
+
 ## pyannote (MIT, gated upstream)
 
 `pyannote` uses the community ONNX (onnx-community, MIT), itself an export of
-`pyannote/segmentation-3.0` (MIT but **gated** — upstream requires accepting conditions
-and providing contact info). The weights are MIT-licensed; the gate is an access
+`pyannote/segmentation-3.0` (MIT but **gated**: upstream requires accepting conditions
+and providing contact info). The weights are MIT-licensed. The gate is only an access
 formality. The re-hosted card attributes both upstream sources.
 
-## MarbleNet — NVIDIA Open Model License
+## MarbleNet: NVIDIA Open Model License
 
 `marblenet` derives from
 [nvidia/frame_vad_multilingual_marblenet_v2.0](https://huggingface.co/nvidia/frame_vad_multilingual_marblenet_v2.0),
 distributed under the **NVIDIA Open Model License**. Commercial use is permitted, but
-you are responsible for complying with that license (attribution and the terms therein).
+you are responsible for complying with that license, including its attribution terms.
 The mirrored repo's model card reproduces the license and links upstream. Review the
-license before redistributing or using it commercially.
+license before redistributing the model or using it commercially.
+
+## PulseVAD (MIT)
+
+The PulseVAD weights are MIT-licensed, Copyright (c) 2026 Aydin Adnan. `vadonnx` does not
+bundle or mirror them. It downloads them from the upstream repository at a pinned
+commit. If you redistribute the files, include the upstream
+[LICENSE](https://github.com/AydinAdnan/PulseVAD/blob/af25e79d66830a3fee74541812721f6158fc92b5/LICENSE).
+
+The upstream
+[ATTRIBUTION.md](https://github.com/AydinAdnan/PulseVAD/blob/af25e79d66830a3fee74541812721f6158fc92b5/ATTRIBUTION.md)
+lists the training data and tools:
+
+- LibriSpeech train-clean-100 (CC BY 4.0), Vassil Panayotov, Guoguo Chen, Daniel Povey,
+  Sanjeev Khudanpur.
+- Common Voice (CC0), Mozilla.
+- Multilingual LibriSpeech (CC BY 4.0).
+- VoxLingua107 (CC BY 4.0).
+- MUSAN noise and music (CC BY 4.0), David Snyder, Guoguo Chen, Daniel Povey.
+- DNS Challenge noise, Interspeech 2020 (CC BY 4.0 / CC0 subset), Chandan K. A. Reddy et al.
+- Synthetic wind noise (Mirabilii 2022 algorithm), synthesized locally.
+- Silero VAD v5/v6 (MIT), used only to label the training audio.
+
+Upstream states that it did not use the Silero labeled dataset, LibriVAD or the kiloVAD
+checkpoints, which have non-commercial licenses.
 
 ## Bundled assets
 
 The wheel bundles only:
-- `silero_vad.onnx` (MIT) — the offline default model;
-- `fsmn_cmvn.npz` — CMVN statistics derived from FunASR (MIT);
-- `marblenet_mel_fb.npy` / `marblenet_window.npy` — the mel filterbank/window extracted
+- `silero_vad.onnx` (MIT): the offline default model.
+- `fsmn_cmvn.npz`: CMVN statistics derived from the FunASR FSMN-VAD model (FunASR Model Open Source License v1.1, attribution above).
+- `marblenet_mel_fb.npy` / `marblenet_window.npy`: the mel filterbank and window extracted
   from the NeMo MarbleNet preprocessor (NVIDIA Open Model License).
 
-No model weights other than Silero are shipped in the wheel; everything else is fetched
+No model weights other than Silero ship in the wheel. Everything else is fetched
 on demand from HuggingFace.
+
+---
+[← Conversion](conversion.md) · [Home](README.md) · [API reference →](api.md)

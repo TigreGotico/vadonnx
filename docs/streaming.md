@@ -60,3 +60,6 @@ if vad.is_speech(chunk, sample_rate=16000):
 
 Each frame represents `vad.frame_duration` seconds (`frame_size / sample_rate`). For
 Silero at 16 kHz that is `512 / 16000 = 32 ms`.
+
+---
+[← Quickstart](quickstart.md) · [Home](README.md) · [Custom models →](custom_models.md)

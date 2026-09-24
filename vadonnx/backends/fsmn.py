@@ -44,8 +44,25 @@ def _apply_lfr(feat: np.ndarray, m: int = _LFR_M, n: int = _LFR_N) -> np.ndarray
     return np.vstack(rows).astype(np.float32)
 
 
+# FunASR calls a frame speech when exp(log p_speech) >= exp(log p_sil) +
+# speech_noise_thres, with speech_noise_thres 0.6 in the model's vad.yaml. The
+# softmax has one silence pdf (id 0) and p_speech = 1 - p_sil, so the rule is
+# p_speech >= 0.8. This model answers up to 0.635 on digital silence (the
+# same features FunASR's own front end computes, checked value for value),
+# and FunASR's pipeline returns no segment on it because of this rule, not
+# because of the front end. A 0.5 threshold on the raw probability fired the
+# dinkum listener on 8 s of zeros (T-2478, T-2490).
+FUNASR_SPEECH_NOISE_THRES = 0.6
+FUNASR_SPEECH_THRESHOLD = (1.0 + FUNASR_SPEECH_NOISE_THRES) / 2.0
+
+
 class FsmnVAD(VADModel):
-    """FSMN-VAD backend (batch + streaming)."""
+    """FSMN-VAD backend (batch + streaming).
+
+    The default activation threshold is 0.8, FunASR's own speech rule (see
+    ``FUNASR_SPEECH_THRESHOLD``); the deactivation threshold follows the base
+    class at 0.15 below it.
+    """
 
     def __init__(
         self,
@@ -55,7 +72,7 @@ class FsmnVAD(VADModel):
         providers: Optional[List[str]] = None,
         intra_threads: int = 1,
         inter_threads: int = 1,
-        threshold: float = 0.5,
+        threshold: float = FUNASR_SPEECH_THRESHOLD,
         neg_threshold: Optional[float] = None,
         cmvn_file: Optional[str] = None,
     ):

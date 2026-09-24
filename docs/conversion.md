@@ -1,8 +1,8 @@
 # Model conversion
 
-Conversion is a maintainer task: fetch/export each upstream VAD, verify it, and publish
-the ONNX to the [`TigreGotico`](https://huggingface.co/TigreGotico) HF org. Runtime users
-never need any of this — models download on demand.
+Conversion is a maintainer task: fetch or export each upstream VAD, verify it, and
+publish the ONNX to the [`TigreGotico`](https://huggingface.co/TigreGotico) HF org.
+Runtime users never need any of this, because models download on demand.
 
 ## Install the conversion extras
 
@@ -31,7 +31,7 @@ huggingface-cli login        # once
 python scripts/publish.py    # or: python scripts/publish.py marblenet
 ```
 
-The script prints the resulting commit SHAs; pin them into the matching
+The script prints the resulting commit SHAs. Pin them into the matching
 `ModelSpec.revision` fields in `vadonnx/registry.py` so downloads are reproducible.
 
 ## Per-model notes
@@ -39,13 +39,16 @@ The script prints the resulting commit SHAs; pin them into the matching
 | model | how | int8 |
 |-------|-----|------|
 | `silero` | download official ONNX, verify | n/a (already tiny) |
-| `ten` | download official ONNX, discover signature | — |
-| `fsmn` | download `model.onnx` + `model_quant.onnx` + `am.mvn`; bake CMVN | `model_quant.onnx` |
-| `marblenet` | NeMo `EncDecFrameClassificationModel.export()`; bundle mel fb+window | `marblenet_int8.onnx` (dynamic) |
-| `speechbrain` | export CRDNN graph from SpeechBrain; bundle mel matrix+window | — |
+| `ten` | download official ONNX, discover signature | n/a |
+| `fsmn` | download `model.onnx` + `model_quant.onnx` + `am.mvn`, bake CMVN | `model_quant.onnx` |
+| `marblenet` | NeMo `EncDecFrameClassificationModel.export()`, bundle mel fb+window | `marblenet_int8.onnx` (dynamic) |
+| `speechbrain` | export CRDNN graph from SpeechBrain, bundle mel matrix+window | n/a |
 | `pyannote` | mirror the community ONNX (fp32 + int8) | `model_int8.onnx` |
 
-**Why MarbleNet ships features-input + a numpy frontend:** NeMo's preprocessor uses
+**Why MarbleNet ships a features input and a numpy frontend:** NeMo's preprocessor uses
 `torch.stft`, which neither ONNX exporter (dynamo or TorchScript) can emit. So the
-features→logits graph is exported and the mel frontend is reproduced in numpy using
-NeMo's exact filterbank/window (bundled), giving end-to-end MAE ~4e-4 vs NeMo.
+features-to-logits graph is exported, and the mel frontend is reproduced in numpy using
+NeMo's exact filterbank and window (bundled), giving end-to-end MAE of about 4e-4 against NeMo.
+
+---
+[← Plugins](plugins.md) · [Home](README.md) · [Licensing →](licensing.md)

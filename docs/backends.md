@@ -1,7 +1,7 @@
 # Backends
 
 Every model is exposed through the same `VADModel` API. `silero` is bundled in the
-wheel; the others download from the [`TigreGotico`](https://huggingface.co/TigreGotico)
+wheel. The others download from the [`TigreGotico`](https://huggingface.co/TigreGotico)
 HuggingFace org on first use and cache under `$XDG_DATA_HOME/vadonnx`. Each download is
 pinned to a specific revision.
 
@@ -13,23 +13,24 @@ between `vadonnx` and the upstream reference implementation on the same audio.
 | `silero` / `silero-8k` / `silero-op15` | 16k / 8k / 16k | 32 ms | MAE 0 | MIT |
 | `marblenet` / `marblenet-int8` | 16k | 20 ms | MAE 4e-4 | NVIDIA Open Model License |
 | `pyannote` / `pyannote-int8` | 16k | 17 ms | MAE 0 | MIT |
-| `fsmn` / `fsmn-quant` | 16k | 10 ms | tracks upstream | MIT |
+| `fsmn` / `fsmn-quant` | 16k | 10 ms | tracks upstream | FunASR Model License v1.1 |
 | `speechbrain` | 16k | 10 ms | MAE 0 | Apache-2.0 |
-| `ten` | 16k | 16 ms | mel exact, pitch approximated | Apache-2.0 |
+| `ten` | 16k | 16 ms | mel exact, pitch approximated | Apache-2.0 + TEN conditions |
+| `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | 16k | 200 ms | MAE 2e-4 / 1.5e-7 / 2.4e-7 | MIT |
 
 ## `silero` / `silero-8k` / `silero-op15`
 
 [Silero VAD](https://github.com/snakers4/silero-vad) v6. Raw PCM, 32 ms frames (512
 samples at 16 kHz, 256 at 8 kHz) with a 64/32-sample context window carried across
 frames and a single recurrent state tensor. Bundled in the wheel and usable offline.
-`silero-op15` is the 16 kHz-only opset-15 build (smaller; for older ONNX Runtimes).
-Dynamic int8 quantization is not provided — it does not reduce the model size.
+`silero-op15` is the 16 kHz-only opset-15 build, smaller and for older ONNX Runtimes.
+Dynamic int8 quantization is not provided, because it does not reduce the model size.
 
 ## `marblenet` / `marblenet-int8`
 
 NVIDIA NeMo [Frame-VAD MarbleNet](https://huggingface.co/nvidia/frame_vad_multilingual_marblenet_v2.0),
-multilingual. Classifies 80-mel log-spectrogram features (preemphasis, centered STFT,
-NeMo's mel filterbank and window, `log(x + 5.96e-8)`); `P(speech) = softmax(logits)[1]`
+multilingual. It classifies 80-mel log-spectrogram features (preemphasis, centered STFT,
+NeMo's mel filterbank and window, `log(x + 5.96e-8)`), giving `P(speech) = softmax(logits)[1]`
 per 20 ms frame. The mel filterbank and window are bundled in the wheel. `marblenet-int8`
 is the dynamically quantized graph (~36% of the size). License obligations: see
 [licensing.md](licensing.md).
@@ -47,19 +48,25 @@ pyannote diarization pipelines.
 
 FunASR [FSMN-VAD](https://huggingface.co/funasr/fsmn-vad-onnx). Classifies kaldi-style
 fbank features (80-mel) stacked at low frame rate (`lfr_m=5`) and CMVN-normalized to a
-400-dim input, through a streaming FSMN with four recurrent caches;
+400-dim input, through a streaming FSMN with four recurrent caches, giving
 `P(speech) = 1 - softmax[0]` (silence is PDF id 0). The CMVN statistics are bundled in
-the wheel. Requires the `fsmn` extra (`kaldi-native-fbank`) for the fbank frontend:
+the wheel. It requires the `fsmn` extra (`kaldi-native-fbank`) for the fbank frontend:
 `uv pip install "vadonnx[fsmn]"`. `fsmn-quant` is the int8 graph.
+
+The default threshold is **0.8**, not 0.5: FunASR calls a frame speech only when
+`p_speech >= p_silence + 0.6` (its `speech_noise_thres`), which with one silence pdf is
+`p_speech >= 0.8`. The model answers up to 0.635 on digital silence, so a 0.5
+threshold fires on nothing at all; FunASR's own pipeline returns no segment there,
+and neither does vadonnx at 0.8. Pass `threshold=` to change it.
 
 ## `speechbrain`
 
 [SpeechBrain CRDNN VAD](https://huggingface.co/speechbrain/vad-crdnn-libriparty),
-trained on LibriParty. Classifies 40-mel log-Fbank features (CNN → RNN → DNN → sigmoid)
+trained on LibriParty. It classifies 40-mel log-Fbank features (CNN, RNN, DNN, sigmoid)
 into a per-frame posterior at 10 ms resolution. The mel filter matrix and window are
-bundled in the wheel. Trained on overlapping cocktail-party speech; on clean
-single-speaker audio it labels low-level ambient sound as active, so the default
-`threshold` is 0.7.
+bundled in the wheel. The training data has overlapping cocktail-party speech, so on
+clean single-speaker audio the model labels low-level ambient sound as active. The
+default `threshold` is 0.7 to compensate.
 
 ## `ten`
 
@@ -72,6 +79,31 @@ The mel branch reproduces the upstream C implementation exactly; the pitch featu
 an autocorrelation estimate in place of TEN's native pitch tracker. The mel mean/std and
 STFT window are bundled in the wheel.
 
+## `pulsevad` / `pulsevad-fp32` / `pulsevad-81k`
+
+[PulseVAD](https://github.com/AydinAdnan/PulseVAD) v0.1.3, a causal depthwise-separable
+CNN. It classifies one 200 ms window (3200 samples) at a time, with no overlap and no
+state across windows, and gives `P(speech) = sigmoid(logit[1] - logit[0])`. The numpy
+frontend follows upstream: preemphasis (0.97), waveform z-norm, centered STFT (Hann-400
+in `n_fft=512`, hop 160), a 64-band HTK mel filterbank with Slaney area normalization,
+`log(x + 1e-5)` and a per-band z-norm over the 21 frames. The filterbank is computed, not
+downloaded.
+
+- `pulsevad`: 2,118 parameters, int8 QDQ graph, 27 KB. Upstream default.
+- `pulsevad-fp32`: the same network as a float32 graph, 12 KB.
+- `pulsevad-81k`: the 81,090-parameter teacher, float32, 326 KB.
+
+The files are not on HuggingFace. `vadonnx` downloads them from the upstream commit
+`af25e79` (tag `v0.1.3`) and checks each sha256 digest before it caches the file.
+
+Parity is measured against upstream `predict_window` on `test/resources/speech.wav`
+(55 windows). The int8 gap comes from a float32 rounding difference in the computed
+filterbank, which the quantized graph amplifies. It is 60 times smaller than the gap
+between the upstream int8 and float32 models on the same audio (MAE 1.2e-2).
+
+The 2.1k models have a calibrated negative bias: on clean speech their probability stays
+near 0.7. Keep the threshold at 0.5.
+
 ## Choosing
 
 | need | model |
@@ -80,6 +112,9 @@ STFT window are bundled in the wheel.
 | multilingual | `marblenet` |
 | diarization-aligned | `pyannote` |
 | FunASR-compatible pipeline | `fsmn` |
-| smallest footprint | `marblenet-int8` / `fsmn-quant` |
+| smallest footprint | `pulsevad` / `marblenet-int8` / `fsmn-quant` |
 
 Measured comparisons across datasets are in [the benchmark report](../benchmark/results/REPORT.md).
+
+---
+[← Custom models](custom_models.md) · [Home](README.md) · [Plugins →](plugins.md)

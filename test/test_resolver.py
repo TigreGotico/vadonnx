@@ -48,3 +48,35 @@ def test_sidecar_signature(tmp_path):
     IOSignature(sample_rate=16000, frame_size=512).save_json(str(tmp_path / "m.signature.json"))
     sig = sidecar_signature(str(model))
     assert sig is not None and sig.frame_size == 512
+
+
+def test_download_pinned_checks_digest_and_mode(tmp_path):
+    import hashlib
+    import os
+    import stat
+
+    import pytest
+
+    from vadonnx.resolver import download_pinned
+
+    src = tmp_path / "src.onnx"
+    src.write_bytes(b"not really a model")
+    good = hashlib.sha256(src.read_bytes()).hexdigest()
+    cache = tmp_path / "cache"
+
+    with pytest.raises(ValueError, match="sha256 mismatch"):
+        download_pinned(src.as_uri(), "0" * 64, "m.onnx", str(cache))
+    # a failed download leaves no model and no partial file behind
+    assert not [p for p in cache.rglob("*") if p.is_file()]
+
+    umask = os.umask(0o022)
+    try:
+        path = download_pinned(src.as_uri(), good, "m.onnx", str(cache))
+    finally:
+        os.umask(umask)
+    with open(path, "rb") as f:
+        assert f.read() == b"not really a model"
+    assert stat.S_IMODE(os.stat(path).st_mode) == 0o644
+    # the second call uses the cache
+    src.unlink()
+    assert download_pinned(src.as_uri(), good, "m.onnx", str(cache)) == path
