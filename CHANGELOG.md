@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.2a1](https://github.com/TigreGotico/vadonnx/tree/0.2.2a1) (2026-09-24)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.1a1...0.2.2a1)
+
+**Merged pull requests:**
+
+- fix: fsmn default threshold follows FunASR's speech rule \(0.8\) [\#11](https://github.com/TigreGotico/vadonnx/pull/11) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.2.1a1](https://github.com/TigreGotico/vadonnx/tree/0.2.1a1) (2026-09-18)
 
 [Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.0a1...0.2.1a1)
