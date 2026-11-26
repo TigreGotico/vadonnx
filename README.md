@@ -38,7 +38,7 @@ uv pip install "vadonnx[mic]"   # + microphone examples
 
 ## Models
 
-| name | rate | parity vs upstream | notes |
+| name | rate | parity vs upstream¹ | notes |
 |------|------|--------------------|-------|
 | `silero` / `silero-8k` / `silero-op15` | 16k / 8k / 16k | MAE 0 | bundled default, raw PCM |
 | `marblenet` / `marblenet-int8` | 16k | MAE 4e-4 | NVIDIA NeMo Frame-VAD, multilingual ([license](docs/licensing.md)) |
@@ -47,6 +47,8 @@ uv pip install "vadonnx[mic]"   # + microphone examples
 | `speechbrain` | 16k | MAE 0 | SpeechBrain CRDNN, LibriParty-trained |
 | `ten` | 16k | n/a | feature extractor provided by TEN's native library ([license](docs/licensing.md), not permissive) |
 | `pulsevad` / `pulsevad-fp32` / `pulsevad-81k` | 16k | MAE 2e-4 / 1.5e-7 / 2.4e-7 | PulseVAD tiny causal CNN, 200 ms windows |
+
+¹ Mean absolute error of the per-frame speech probability against the upstream implementation. These values have no committed result file, so no test checks them.
 
 See [docs/backends.md](docs/backends.md) for per-model detail and the
 [benchmark](benchmark/results/REPORT.md) for measured comparisons across datasets,

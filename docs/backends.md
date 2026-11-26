@@ -6,7 +6,7 @@ HuggingFace org on first use and cache under `$XDG_DATA_HOME/vadonnx`. Each down
 pinned to a specific revision.
 
 The "parity" column reports the mean absolute error of per-frame speech probability
-between `vadonnx` and the upstream reference implementation on the same audio.
+between `vadonnx` and the upstream reference implementation on the same audio. These values come from runs that have no committed result file, so no test checks them.
 
 | model | rate | frame | parity vs upstream | license |
 |-------|------|-------|--------------------|---------|
