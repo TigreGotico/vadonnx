@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.2a2](https://github.com/TigreGotico/vadonnx/tree/0.2.2a2) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a1...0.2.2a2)
+
+**Merged pull requests:**
+
+- test: REPORT.md is the render of the committed result files [\#14](https://github.com/TigreGotico/vadonnx/pull/14) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.2.2a1](https://github.com/TigreGotico/vadonnx/tree/0.2.2a1) (2026-09-24)
 
 [Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.1a1...0.2.2a1)
