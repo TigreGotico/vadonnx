@@ -8,6 +8,7 @@ sample rates.
 from __future__ import annotations
 
 import wave
+from math import gcd
 from typing import Tuple, Union
 
 import numpy as np
@@ -66,19 +67,15 @@ def resample(x: np.ndarray, src_sr: int, dst_sr: int) -> np.ndarray:
 
     try:
         from scipy.signal import resample_poly  # type: ignore
-
-        from math import gcd
-
-        g = gcd(int(src_sr), int(dst_sr))
-        up, down = int(dst_sr) // g, int(src_sr) // g
-        return resample_poly(x, up, down).astype(np.float32)
-    except Exception:
-        # linear interpolation fallback (no extra deps)
+    except ImportError:
         n_out = int(round(x.shape[0] * dst_sr / src_sr))
         if n_out <= 0:
             return np.zeros(0, dtype=np.float32)
         src_idx = np.linspace(0.0, x.shape[0] - 1, num=n_out, dtype=np.float64)
         return np.interp(src_idx, np.arange(x.shape[0]), x).astype(np.float32)
+    g = gcd(int(src_sr), int(dst_sr))
+    up, down = int(dst_sr) // g, int(src_sr) // g
+    return resample_poly(x, up, down).astype(np.float32)
 
 
 def read_wav(path: str) -> Tuple[np.ndarray, int]:

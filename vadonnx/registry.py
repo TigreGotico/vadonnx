@@ -288,11 +288,9 @@ def discover_plugins() -> None:
     if _PLUGINS_LOADED:
         return
     _PLUGINS_LOADED = True
-    try:
-        from importlib.metadata import entry_points
-    except Exception:  # pragma: no cover
-        return
-    for ep in _iter_eps(entry_points, "vadonnx.models"):
+    from importlib.metadata import entry_points
+
+    for ep in entry_points(group="vadonnx.models"):
         try:
             obj = ep.load()
             spec = obj() if callable(obj) and not isinstance(obj, ModelSpec) else obj
@@ -300,19 +298,11 @@ def discover_plugins() -> None:
                 _PLUGIN_SPECS[spec.name] = spec
         except Exception:  # pragma: no cover - third party errors must not break us
             continue
-    for ep in _iter_eps(entry_points, "vadonnx.backends"):
+    for ep in entry_points(group="vadonnx.backends"):
         try:
             _PLUGIN_BACKENDS[ep.name] = ep.load()
         except Exception:  # pragma: no cover
             continue
-
-
-def _iter_eps(entry_points, group):
-    try:
-        eps = entry_points(group=group)
-    except TypeError:  # pragma: no cover - py<3.10 style
-        eps = entry_points().get(group, [])
-    return list(eps)
 
 
 def get_spec(name: str) -> Optional[ModelSpec]:
