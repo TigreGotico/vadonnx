@@ -31,4 +31,7 @@ Downloaded models are cached under `$XDG_DATA_HOME/vadonnx` (default
 
 ## Supported Python
 
-3.10 – 3.14.
+3.10 to 3.14.
+
+---
+[Home](README.md) · [Quickstart →](quickstart.md)

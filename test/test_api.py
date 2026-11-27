@@ -61,7 +61,7 @@ def test_bytes_int16_input(silero, speech_audio):
     audio, sr = speech_audio
     pcm = (audio * 32767).astype("<i2").tobytes()
     silero.reset()
-    probs = silero.probabilities(pcm)  # bytes assume native sample rate
+    probs = silero.probabilities(pcm, sample_rate=sr)
     assert probs.max() > 0.8
 
 
@@ -100,3 +100,52 @@ def test_threshold_default_per_backend():
     # load_vad without threshold keeps the backend's own default
     assert load_vad("silero").threshold == 0.5
     assert load_vad("silero", threshold=0.3).threshold == 0.3
+
+
+def _wave_oracle(path):
+    import wave
+    with wave.open(path, "rb") as wf:
+        sr = wf.getframerate()
+        raw = wf.readframes(wf.getnframes())
+    return np.frombuffer(raw, dtype="<i2").astype(np.float32) / 32768.0, sr
+
+
+def test_wav_bytes_read_as_wav(silero, speech_wav_path):
+    oracle, sr = _wave_oracle(speech_wav_path)
+    with open(speech_wav_path, "rb") as f:
+        data = f.read()
+    expected = silero.probabilities(oracle, sample_rate=sr)
+    got = silero.probabilities(data)
+    np.testing.assert_allclose(got, expected, atol=1e-6)
+    assert silero.get_speech_segments(data) == silero.get_speech_segments(oracle, sample_rate=sr)
+
+
+def test_raw_pcm_bytes_with_rate(silero, speech_audio):
+    audio, sr = speech_audio
+    pcm = (audio * 32767).astype("<i2").tobytes()
+    expected = silero.probabilities(np.frombuffer(pcm, dtype="<i2"), sample_rate=sr)
+    np.testing.assert_allclose(silero.probabilities(pcm, sample_rate=sr), expected, atol=1e-6)
+
+
+def test_non_wav_bytes_without_rate_raise(silero, speech_audio):
+    audio, _ = speech_audio
+    pcm = (audio * 32767).astype("<i2").tobytes()
+    with pytest.raises(ValueError, match="RIFF/WAVE.*sample_rate="):
+        silero.probabilities(pcm)
+    with pytest.raises(ValueError, match="RIFF/WAVE.*sample_rate="):
+        silero.get_speech_segments(pcm)
+
+
+def test_array_without_rate_raises(silero, speech_audio):
+    audio, _ = speech_audio
+    with pytest.raises(ValueError, match="sample_rate is required"):
+        silero.probabilities(audio)
+    with pytest.raises(ValueError, match="sample_rate is required"):
+        silero.get_speech_segments(audio)
+
+
+def test_stream_chunk_without_rate_uses_model_rate(silero, speech_audio):
+    audio, _ = speech_audio
+    silero.reset()
+    assert 0.0 <= silero.process_chunk(audio[:1024]) <= 1.0
+    silero.reset()

@@ -7,8 +7,10 @@ sample rates.
 """
 from __future__ import annotations
 
+import io
 import wave
-from typing import Tuple, Union
+from math import gcd
+from typing import Optional, Tuple, Union
 
 import numpy as np
 
@@ -66,23 +68,39 @@ def resample(x: np.ndarray, src_sr: int, dst_sr: int) -> np.ndarray:
 
     try:
         from scipy.signal import resample_poly  # type: ignore
-
-        from math import gcd
-
-        g = gcd(int(src_sr), int(dst_sr))
-        up, down = int(dst_sr) // g, int(src_sr) // g
-        return resample_poly(x, up, down).astype(np.float32)
-    except Exception:
-        # linear interpolation fallback (no extra deps)
+    except ImportError:
         n_out = int(round(x.shape[0] * dst_sr / src_sr))
         if n_out <= 0:
             return np.zeros(0, dtype=np.float32)
         src_idx = np.linspace(0.0, x.shape[0] - 1, num=n_out, dtype=np.float64)
         return np.interp(src_idx, np.arange(x.shape[0]), x).astype(np.float32)
+    g = gcd(int(src_sr), int(dst_sr))
+    up, down = int(dst_sr) // g, int(src_sr) // g
+    return resample_poly(x, up, down).astype(np.float32)
 
 
-def read_wav(path: str) -> Tuple[np.ndarray, int]:
-    """Read a PCM WAV file into mono float32 audio. Returns ``(audio, sample_rate)``.
+def load_audio(audio: AudioLike, sample_rate: Optional[int] = None) -> Tuple[np.ndarray, int]:
+    """Convert a whole-clip input to ``(mono float32, sample_rate)``.
+
+    WAV bytes (``RIFF....WAVE`` header) give the rate from the header.
+    Raw ``int16`` PCM bytes and numpy arrays need ``sample_rate``.
+    """
+    if isinstance(audio, (bytes, bytearray, memoryview)):
+        data = bytes(audio)
+        if data[:4] == b"RIFF" and data[8:12] == b"WAVE":
+            return read_wav(io.BytesIO(data))
+        if sample_rate is None:
+            raise ValueError(
+                "bytes input is not WAV: pass WAV bytes with a RIFF/WAVE header, "
+                "or raw int16 PCM bytes with sample_rate="
+            )
+    elif sample_rate is None:
+        raise ValueError("sample_rate is required when audio is not WAV bytes")
+    return to_float32_mono(audio), int(sample_rate)
+
+
+def read_wav(path) -> Tuple[np.ndarray, int]:
+    """Read a PCM WAV file (path or binary file object) into mono float32 audio. Returns ``(audio, sample_rate)``.
 
     Uses the standard-library :mod:`wave` module so no third-party audio dependency
     is required for examples and tests.

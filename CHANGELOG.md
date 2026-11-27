@@ -1,13 +1,73 @@
 # Changelog
 
-## [0.1.0a2](https://github.com/TigreGotico/vadonnx/tree/0.1.0a2) (2026-06-16)
+## [0.2.2a6](https://github.com/TigreGotico/vadonnx/tree/0.2.2a6) (2026-11-27)
 
-[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/21ac17d741759b1c8262065ba896e78b3740809f...0.1.0a2)
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a5...0.2.2a6)
 
 **Merged pull requests:**
 
-- ci: modernize release workflows for PyPI release [\#4](https://github.com/TigreGotico/vadonnx/pull/4) ([JarbasAl](https://github.com/JarbasAl))
-- Configure Renovate [\#1](https://github.com/TigreGotico/vadonnx/pull/1) ([renovate[bot]](https://github.com/apps/renovate))
+- test: family input and pinning contract [\#20](https://github.com/TigreGotico/vadonnx/pull/20) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.2.2a5](https://github.com/TigreGotico/vadonnx/tree/0.2.2a5) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a4...0.2.2a5)
+
+## [0.2.2a4](https://github.com/TigreGotico/vadonnx/tree/0.2.2a4) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a3...0.2.2a4)
+
+**Merged pull requests:**
+
+- ci: cancel superseded pull request runs [\#18](https://github.com/TigreGotico/vadonnx/pull/18) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+- fix: read WAV bytes as WAV [\#17](https://github.com/TigreGotico/vadonnx/pull/17) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.2.2a3](https://github.com/TigreGotico/vadonnx/tree/0.2.2a3) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a2...0.2.2a3)
+
+**Merged pull requests:**
+
+- refactor: simplify vadonnx [\#16](https://github.com/TigreGotico/vadonnx/pull/16) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.2.2a2](https://github.com/TigreGotico/vadonnx/tree/0.2.2a2) (2026-11-26)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a1...0.2.2a2)
+
+**Merged pull requests:**
+
+- test: REPORT.md is the render of the committed result files [\#14](https://github.com/TigreGotico/vadonnx/pull/14) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.2.2a1](https://github.com/TigreGotico/vadonnx/tree/0.2.2a1) (2026-09-24)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.1a1...0.2.2a1)
+
+**Merged pull requests:**
+
+- fix: fsmn default threshold follows FunASR's speech rule \(0.8\) [\#11](https://github.com/TigreGotico/vadonnx/pull/11) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.2.1a1](https://github.com/TigreGotico/vadonnx/tree/0.2.1a1) (2026-09-18)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.0a1...0.2.1a1)
+
+**Merged pull requests:**
+
+- fix: state the real licence of the ten and fsmn weights [\#10](https://github.com/TigreGotico/vadonnx/pull/10) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.2.0a1](https://github.com/TigreGotico/vadonnx/tree/0.2.0a1) (2026-09-17)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.1.1a1...0.2.0a1)
+
+**Merged pull requests:**
+
+- feat: add PulseVAD models [\#8](https://github.com/TigreGotico/vadonnx/pull/8) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.1.1a1](https://github.com/TigreGotico/vadonnx/tree/0.1.1a1) (2026-07-30)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.1.0...0.1.1a1)
+
+**Merged pull requests:**
+
+- docs: rewrite README in Simplified Technical English [\#6](https://github.com/TigreGotico/vadonnx/pull/6) ([JarbasAl](https://github.com/JarbasAl))
 
 
 

@@ -5,15 +5,18 @@ from __future__ import annotations
 import json
 import os
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-
 HERE = os.path.dirname(__file__)
 RES = os.path.join(HERE, "results")
 PLOTS = os.path.join(RES, "plots")
 COND_ORDER = ["clean", "20dB", "15dB", "10dB", "5dB", "0dB"]
 SNR_X = {"clean": 30, "20dB": 20, "15dB": 15, "10dB": 10, "5dB": 5, "0dB": 0}
+
+
+def _pyplot():
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    return plt
 
 
 def _load():
@@ -26,6 +29,7 @@ def _conds(model):
 
 
 def plot_vs_snr(data, metric, ylabel, fname, lower_better=False):
+    plt = _pyplot()
     plt.figure(figsize=(7, 4.5))
     for name, model in data["models"].items():
         conds = _conds(model)
@@ -44,6 +48,7 @@ def plot_vs_snr(data, metric, ylabel, fname, lower_better=False):
 
 
 def plot_roc(data, cond, fname):
+    plt = _pyplot()
     plt.figure(figsize=(6, 6))
     for name, model in data["models"].items():
         if cond not in model:
@@ -74,7 +79,22 @@ def _table(data, metric, fmt="{:.3f}"):
     return "\n".join(lines)
 
 
+def _category_extremes(noise):
+    """Name the weakest and strongest noise category of each model."""
+    cats = noise["meta"]["categories"]
+    lines = []
+    for label, pick in (("Weakest", min), ("Strongest", max)):
+        by_cat = {}
+        for name, m in noise["models"].items():
+            by_cat.setdefault(pick(cats, key=lambda c: m[c]), []).append(name)
+        parts = [f"**{c}** ({', '.join(names)})" for c, names in
+                 sorted(by_cat.items(), key=lambda kv: -len(kv[1]))]
+        lines.append(f"{label} category per model: " + "; ".join(parts) + ".")
+    return "\n".join(lines)
+
+
 def plot_noise_categories(noise, fname):
+    plt = _pyplot()
     cats = noise["meta"]["categories"]
     models = list(noise["models"])
     x = range(len(cats))
@@ -102,18 +122,9 @@ def _optional(path):
     return None
 
 
-def main():
-    os.makedirs(PLOTS, exist_ok=True)
-    data = _load()
+def render(data, noise, vox):
+    """Return the REPORT.md text for the result files."""
     meta = data["meta"]
-    noise = _optional("results_noise.json")
-    vox = _optional("results_vox.json")
-
-    plot_vs_snr(data, "auc", "ROC-AUC", "auc_vs_snr.png")
-    plot_vs_snr(data, "f1", "F1 (segmented)", "f1_vs_snr.png")
-    plot_vs_snr(data, "der", "Detection Error Rate", "der_vs_snr.png", lower_better=True)
-    plot_roc(data, "clean", "roc_clean.png")
-    plot_roc(data, "5dB", "roc_5db.png")
 
     rank = sorted(data["models"].items(),
                   key=lambda kv: -sum(v["auc"] for v in kv[1].values()) / len(kv[1]))
@@ -195,7 +206,6 @@ speaker turns), so numbers are lower and more realistic than the synthetic sweep
     # ---- noise category breakdown ----
     if noise:
         cats = noise["meta"]["categories"]
-        plot_noise_categories(noise, "noise_categories.png")
         head = "| model | " + " | ".join(cats) + " |"
         sep = "|" + "---|" * (len(cats) + 1)
         rows = [head, sep]
@@ -208,9 +218,7 @@ speaker turns), so numbers are lower and more realistic than the synthetic sweep
 
 ![Noise categories](plots/noise_categories.png)
 
-All backends are weakest on **human non-speech** noise (babble-like: laughter, coughing,
-crying) — the hardest case for VAD since it is spectrally speech-like — and strongest on
-**interior/domestic** sounds.
+{_category_extremes(noise)}
 """
 
     md += """
@@ -221,10 +229,25 @@ crying) — the hardest case for VAD since it is spectrally speech-like — and 
 - **AVA-Speech** scoring is supported (`datasets.load_ava_speech` + label CSV); its audio
   is fetched separately from YouTube via `yt-dlp`.
 - `int8` variants show the accuracy difference from quantization.
-- `ten` requires TEN's native feature extractor and is not scored here.
+- `ten` requires TEN's native feature extractor.
 """
+    return md
+
+
+def main():
+    os.makedirs(PLOTS, exist_ok=True)
+    data = _load()
+    noise = _optional("results_noise.json")
+    vox = _optional("results_vox.json")
+    plot_vs_snr(data, "auc", "ROC-AUC", "auc_vs_snr.png")
+    plot_vs_snr(data, "f1", "F1 (segmented)", "f1_vs_snr.png")
+    plot_vs_snr(data, "der", "Detection Error Rate", "der_vs_snr.png", lower_better=True)
+    plot_roc(data, "clean", "roc_clean.png")
+    plot_roc(data, "5dB", "roc_5db.png")
+    if noise:
+        plot_noise_categories(noise, "noise_categories.png")
     with open(os.path.join(RES, "REPORT.md"), "w") as f:
-        f.write(md)
+        f.write(render(data, noise, vox))
     print("wrote", os.path.join(RES, "REPORT.md"))
 
 

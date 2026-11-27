@@ -130,9 +130,8 @@ speaker turns), so numbers are lower and more realistic than the synthetic sweep
 
 ![Noise categories](plots/noise_categories.png)
 
-All backends are weakest on **human non-speech** noise (babble-like: laughter, coughing,
-crying) — the hardest case for VAD since it is spectrally speech-like — and strongest on
-**interior/domestic** sounds.
+Weakest category per model: **human non-speech** (marblenet, fsmn, speechbrain, pyannote, ten, energy); **nature/water** (silero); **exterior/urban** (webrtc).
+Strongest category per model: **interior/domestic** (silero, fsmn, speechbrain, ten, webrtc); **animals** (marblenet, energy); **nature/water** (pyannote).
 
 ### Notes
 - The synthetic sweep uses exact labels; utterance-internal pauses count as speech, so it
@@ -141,4 +140,4 @@ crying) — the hardest case for VAD since it is spectrally speech-like — and 
 - **AVA-Speech** scoring is supported (`datasets.load_ava_speech` + label CSV); its audio
   is fetched separately from YouTube via `yt-dlp`.
 - `int8` variants show the accuracy difference from quantization.
-- `ten` requires TEN's native feature extractor and is not scored here.
+- `ten` requires TEN's native feature extractor.

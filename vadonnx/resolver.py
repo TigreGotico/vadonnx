@@ -5,7 +5,7 @@ Resolution order used by :func:`vadonnx.api.load_vad`:
 1. an explicit local ``.onnx`` path (used as-is);
 2. an ``http(s)://`` URL (downloaded once and cached);
 3. a registry name -> bundled file in the wheel, else a HuggingFace download pinned
-   by revision.
+   by revision, else a download from a pinned URL checked by sha256.
 
 Downloads are cached under ``$XDG_DATA_HOME/vadonnx`` (``~/.local/share/vadonnx``).
 """
@@ -63,6 +63,45 @@ def download_url(url: str, cache_dir: Optional[str] = None) -> str:
     return dest
 
 
+def download_pinned(
+    url: str, sha256: str, filename: str, cache_dir: Optional[str] = None
+) -> str:
+    """Download a file from a pinned URL and verify its sha256 digest.
+
+    The file is written to a temporary name in the cache folder and moved into place
+    only after the digest matches, so an interrupted or altered download never
+    appears as a cached model. The published file gets the default file mode, not
+    the owner-only mode of a temporary file.
+    """
+    folder = os.path.join(get_cache_dir(cache_dir), "url", sha256[:16])
+    os.makedirs(folder, exist_ok=True)
+    dest = os.path.join(folder, filename)
+    if os.path.isfile(dest):
+        return dest
+    import tempfile
+    import urllib.request
+
+    fd, tmp = tempfile.mkstemp(dir=folder, suffix=".part")
+    try:
+        digest = hashlib.sha256()
+        with os.fdopen(fd, "wb") as f, urllib.request.urlopen(url) as resp:
+            for block in iter(lambda: resp.read(1 << 16), b""):
+                digest.update(block)
+                f.write(block)
+        if digest.hexdigest() != sha256:
+            raise ValueError(
+                f"sha256 mismatch for {url}: expected {sha256}, got {digest.hexdigest()}"
+            )
+        umask = os.umask(0)
+        os.umask(umask)
+        os.chmod(tmp, 0o666 & ~umask)
+        os.replace(tmp, dest)
+    finally:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+    return dest
+
+
 def hf_download(
     repo: str, filename: str, revision: Optional[str], cache_dir: Optional[str] = None
 ) -> str:
@@ -82,9 +121,13 @@ def resolve_spec_file(spec: ModelSpec, revision: Optional[str], cache_dir: Optio
         local = bundled_path(spec.bundled)
         if local:
             return local
+    if spec.url and not spec.hf_repo:
+        if not spec.sha256:
+            raise ValueError(f"model {spec.name!r} has a url but no sha256 digest")
+        return download_pinned(spec.url, spec.sha256, spec.filename, cache_dir)
     if not spec.hf_repo:
         raise FileNotFoundError(
-            f"model {spec.name!r} has no bundled file and no hf_repo to download from"
+            f"model {spec.name!r} has no bundled file, no hf_repo and no url to download from"
         )
     return hf_download(spec.hf_repo, spec.filename, revision or spec.revision, cache_dir)
 

@@ -52,3 +52,13 @@ def test_read_wav(speech_wav_path):
     assert audio.ndim == 1
     assert np.abs(audio).max() <= 1.0
     assert len(audio) / sr > 5  # ~11s clip
+
+
+def test_resample_falls_back_without_scipy(monkeypatch):
+    import sys
+
+    monkeypatch.setitem(sys.modules, "scipy", None)
+    monkeypatch.setitem(sys.modules, "scipy.signal", None)
+    x = np.sin(np.arange(8000) / 10).astype(np.float32)
+    expected = np.interp(np.linspace(0, 7999, 16000), np.arange(8000), x).astype(np.float32)
+    np.testing.assert_array_equal(resample(x, 8000, 16000), expected)
