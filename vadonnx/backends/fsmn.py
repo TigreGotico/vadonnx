@@ -150,7 +150,7 @@ class FsmnVAD(VADModel):
 
     # streaming path
     def _reset_state(self) -> None:
-        self._caches = self._zero_caches() if hasattr(self, "session") else []
+        self._caches = self._zero_caches()
         self._audio_buf = np.zeros(0, dtype=np.float32)
         self._stream_prob = 0.0
 
