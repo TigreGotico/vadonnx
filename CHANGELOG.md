@@ -1,8 +1,8 @@
 # Changelog
 
-## [0.2.2a4](https://github.com/TigreGotico/vadonnx/tree/0.2.2a4) (2026-11-27)
+## [0.2.2a5](https://github.com/TigreGotico/vadonnx/tree/0.2.2a5) (2026-11-27)
 
-[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a3...0.2.2a4)
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a3...0.2.2a5)
 
 **Merged pull requests:**
 
