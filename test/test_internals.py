@@ -70,7 +70,7 @@ def test_resample_numpy_fallback(monkeypatch):
 
 # ---- empty audio ----
 def test_empty_audio(silero):
-    assert silero.probabilities(np.zeros(0, dtype=np.float32)).size == 0
-    assert silero.get_speech_segments(np.zeros(0, dtype=np.float32)) == []
+    assert silero.probabilities(np.zeros(0, dtype=np.float32), sample_rate=16000).size == 0
+    assert silero.get_speech_segments(np.zeros(0, dtype=np.float32), sample_rate=16000) == []
     silero.reset()
     assert silero.process_chunk(np.zeros(0, dtype=np.float32)) == 0.0
