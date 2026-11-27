@@ -45,6 +45,12 @@ The interface every backend exposes.
 Accepted `audio` types everywhere: `int16` PCM **bytes**, or numpy arrays of
 `int16` / `int32` / `uint8` / `float32` / `float64`. 2-D arrays are downmixed to mono.
 
+`probabilities` and `get_speech_segments` also accept WAV bytes (a `RIFF`/`WAVE`
+header). The rate comes from the header. For raw PCM bytes and arrays, `sample_rate`
+is required, and a missing rate raises `ValueError`. The streaming calls
+(`process_chunk`, `is_speech`, `__call__`) take a chunk with no `sample_rate` to be at
+the model rate.
+
 ## `class SpeechSegment`
 
 `start`, `end` (seconds), `duration` property, iterable as `(start, end)`.

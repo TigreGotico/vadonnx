@@ -14,7 +14,7 @@ from typing import List, Optional
 
 import numpy as np
 
-from .audio import AudioLike, resample, to_float32_mono
+from .audio import AudioLike, load_audio, resample, to_float32_mono
 from .segment import SpeechSegment, probs_to_segments
 
 
@@ -77,7 +77,8 @@ class VADModel(abc.ABC):
         Chunks need not align to the model frame size — leftover samples are buffered
         and combined with the next call. If the chunk does not complete a frame, the most
         recently computed probability is returned. Call :meth:`flush` at end of stream to
-        process any trailing buffered audio.
+        process any trailing buffered audio. With no ``sample_rate``, the chunk is
+        taken to be at the model rate.
         """
         x = self._prepare(audio, sample_rate)
         if x.size:
@@ -139,9 +140,13 @@ class VADModel(abc.ABC):
     def probabilities(
         self, audio: AudioLike, sample_rate: Optional[int] = None
     ) -> np.ndarray:
-        """Return the per-frame speech probability array for a whole audio buffer."""
-        x = self._prepare(audio, sample_rate)
-        return self._run_all(x)
+        """Return the per-frame speech probability array for a whole audio buffer.
+
+        ``sample_rate`` is required for arrays and raw PCM bytes; WAV bytes give it
+        from the header.
+        """
+        x, sr = load_audio(audio, sample_rate)
+        return self._run_all(self._prepare(x, sr))
 
     def get_speech_segments(
         self,
@@ -159,9 +164,10 @@ class VADModel(abc.ABC):
 
         Returns a list of :class:`~vadonnx.segment.SpeechSegment` with ``start``/``end``
         in seconds, computed by running :meth:`probabilities` then applying the shared
-        double-threshold segmentation.
+        double-threshold segmentation. ``sample_rate`` follows :meth:`probabilities`.
         """
-        x = self._prepare(audio, sample_rate)
+        x, sr = load_audio(audio, sample_rate)
+        x = self._prepare(x, sr)
         probs = self._run_all(x)
         return probs_to_segments(
             probs,
