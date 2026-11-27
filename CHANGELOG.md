@@ -1,8 +1,20 @@
 # Changelog
 
+## [0.2.2a6](https://github.com/TigreGotico/vadonnx/tree/0.2.2a6) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a5...0.2.2a6)
+
+**Merged pull requests:**
+
+- test: family input and pinning contract [\#20](https://github.com/TigreGotico/vadonnx/pull/20) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.2.2a5](https://github.com/TigreGotico/vadonnx/tree/0.2.2a5) (2026-11-27)
 
-[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a3...0.2.2a5)
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a4...0.2.2a5)
+
+## [0.2.2a4](https://github.com/TigreGotico/vadonnx/tree/0.2.2a4) (2026-11-27)
+
+[Full Changelog](https://github.com/TigreGotico/vadonnx/compare/0.2.2a3...0.2.2a4)
 
 **Merged pull requests:**
 
